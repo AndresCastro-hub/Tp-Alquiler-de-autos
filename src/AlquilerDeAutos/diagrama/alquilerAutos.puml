@@ -1,0 +1,81 @@
+@startuml
+ abstract class Vehiculo{
+    -matricula: string
+    -estado: string
+    -contadorKm: number
+    -tarifaBase: number
+    -tarifaExtra: number
+
+    + abstract calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+    + actualizarContador(): void
+    + setters_y_getters()
+ }
+
+ class Compacto{
+    -tarifaBase: number
+    -tarifaExtra: number
+
+    + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+ }
+
+ class Suv{
+    -tarifaBase: number
+    -tarifaExtra: number
+
+    + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+ }
+
+ class Sedan{
+    -tarifaBase: number
+    -tarifaExtra: number
+
+    + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+ }
+
+ class Reserva{
+    -cliente: Cliente
+    -vehiculo: Vehiculo
+    -fechaInicio: Date
+    -fechaFinal: Date
+    
+    + calcularCostoTotal()
+  }
+ 
+
+ class Cliente{
+    -nombre: string
+    -apellido: string
+ }
+
+ class GestionDeReservas{
+    -clientes: Cliente[]
+    -reservas: Reserva[]
+    -vehiculos: Vehiculo[]
+
+    +agregarVehiculo(vehiculo: Vehiculo): void
+    +agregarCliente(cliente: Cliente): void
+    -chequearDisponibilidad(): void
+    +agregarReserva(reserva: Reserva): void
+    +cerrarReserva(reserva: Reserva, kmRecorridos: number): number
+ }
+
+ class Mantenimiento{
+    fechaMantenimiento: date
+    costoMantenimiento: number
+
+ }
+
+'relaciones
+
+Cliente *-- GestionDeReservas
+Reserva *-- GestionDeReservas
+Vehiculo *-- GestionDeReservas
+
+Vehiculo <|-- Compacto
+Vehiculo <|-- Sedan
+Vehiculo <|-- Suv
+
+Cliente o-- Reserva
+
+Vehiculo o-- Reserva 
+@enduml

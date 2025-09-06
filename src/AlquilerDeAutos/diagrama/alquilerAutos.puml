@@ -1,4 +1,9 @@
-@startuml
+@startuml TP
+
+title "Drivehub"
+scale 1.5
+
+
  abstract class Vehiculo{
     -matricula: string
     -estado: string
@@ -77,5 +82,9 @@ Vehiculo <|-- Suv
 
 Cliente o-- Reserva
 
-Vehiculo o-- Reserva 
+Vehiculo o-- Reserva
+Vehiculo *--l Mantenimiento
+
+
+
 @enduml

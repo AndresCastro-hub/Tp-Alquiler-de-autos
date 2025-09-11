@@ -8,7 +8,7 @@ Proyecto desarrollado en **TypeScript**.
 Primero, clona el repositorio y entra en la carpeta del proyecto:
 
 ```bash
-git clone https://github.com/AndresCastro-hub/Trabajo-Practico---Alquiler-de-autos.git
+git clone https://github.com/AndresCastro-hub/Tp-Alquiler-de-autos.git
 cd Tp-Alquiler-de-autos
 ```
 

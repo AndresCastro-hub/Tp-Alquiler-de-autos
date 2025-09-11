@@ -1,90 +1,94 @@
 @startuml TP
 
 title "Drivehub"
-scale 1.5
+scale 1.3
 
+' Vehiculos
+abstract class Vehiculo{
+   -matricula: string
+   -estado: string
+   -contadorKm: number
+   -tarifaBase: number
+   -tarifaExtra: number
 
- abstract class Vehiculo{
-    -matricula: string
-    -estado: string
-    -contadorKm: number
-    -tarifaBase: number
-    -tarifaExtra: number
+   + abstract calcularTarifa(fechaInicio: Date, fechaFinal: Date, kmRecorridos: number): number
+   + actualizarContador(): void
+   + setters_y_getters()
+}
 
-    + abstract calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
-    + actualizarContador(): void
-    + setters_y_getters()
- }
+class Compacto{
+   -tarifaBase: number
+   -tarifaExtra: number
+   + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+}
 
- class Compacto{
-    -tarifaBase: number
-    -tarifaExtra: number
+class Suv{
+   -tarifaBase: number
+   -tarifaExtra: number
+   + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+}
 
-    + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
- }
-
- class Suv{
-    -tarifaBase: number
-    -tarifaExtra: number
-
-    + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
- }
-
- class Sedan{
-    -tarifaBase: number
-    -tarifaExtra: number
-
-    + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
- }
-
- class Reserva{
-    -cliente: Cliente
-    -vehiculo: Vehiculo
-    -fechaInicio: Date
-    -fechaFinal: Date
-    
-    + calcularCostoTotal()
-  }
- 
-
- class Cliente{
-    -nombre: string
-    -apellido: string
- }
-
- class GestionDeReservas{
-    -clientes: Cliente[]
-    -reservas: Reserva[]
-    -vehiculos: Vehiculo[]
-
-    +agregarVehiculo(vehiculo: Vehiculo): void
-    +agregarCliente(cliente: Cliente): void
-    -chequearDisponibilidad(): void
-    +agregarReserva(reserva: Reserva): void
-    +cerrarReserva(reserva: Reserva, kmRecorridos: number): number
- }
-
- class Mantenimiento{
-    fechaMantenimiento: date
-    costoMantenimiento: number
-
- }
-
-'relaciones
-
-Cliente *-- GestionDeReservas
-Reserva *-- GestionDeReservas
-Vehiculo *-- GestionDeReservas
+class Sedan{
+   -tarifaBase: number
+   -tarifaExtra: number
+   + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+}
 
 Vehiculo <|-- Compacto
 Vehiculo <|-- Sedan
 Vehiculo <|-- Suv
 
-Cliente o-- Reserva
+' Clientes
+class Cliente{
+   -nombre: string
+   -apellido: string
+}
 
-Vehiculo o-- Reserva
-Vehiculo *--l Mantenimiento
+class GestionDeClientes{
+   - clientes: Cliente[]
+   + agregarCliente(cliente: Cliente): void
+}
 
+GestionDeClientes *-- Cliente
 
+' Reservas
+class Reserva{
+   -cliente: Cliente
+   -vehiculo: Vehiculo
+   -fechaInicio: Date
+   -fechaFinal: Date
 
-@enduml
+   + calcularCostoTotal()
+}
+
+class GestionDeReservas{
+   -chequearDisponibilidad(): void
+   -reservas: Reserva[]
+   +agregarReserva(reserva: Reserva): void
+   +cerrarReserva(reserva: Reserva, kmRecorridos: number): number
+}
+
+GestionDeReservas *-- Reserva
+Cliente -- Reserva
+Vehiculo -- Reserva
+
+' Vehiculos gestion
+class GestionDeVehiculos{
+   - vehiculos: Vehiculo[]
+   + agregarVehiculo(vehiculo: Vehiculo): void
+}
+
+GestionDeVehiculos *-- Vehiculo
+
+' Gestor principal
+class GestorDeAlquilerVehicular{
+   - gestionDeVehiculos: GestionDeVehiculos
+   - gestionDeClientes: GestionDeClientes
+   - gestionDeReservas: GestionDeReservas
+}
+
+GestorDeAlquilerVehicular o-- GestionDeVehiculos 
+GestorDeAlquilerVehicular o-- GestionDeReservas
+GestorDeAlquilerVehicular o-- GestionDeClientes
+
+' Dep

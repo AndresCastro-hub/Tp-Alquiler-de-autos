@@ -57,4 +57,5 @@ npm test
 - Hacer los cambios necesarios
 - Correr los tests (npm test)
 - Subir la rama al remoto (git push origin nombre-de-tu-rama)
-- Crear un Pull Request hacia main 
+- Crear un Pull Request hacia develop
+- Una vez que en develop funciona correctamente crear un pull request hacia el main

@@ -91,4 +91,19 @@ GestorDeAlquilerVehicular o-- GestionDeVehiculos
 GestorDeAlquilerVehicular o-- GestionDeReservas
 GestorDeAlquilerVehicular o-- GestionDeClientes
 
+' Mantenimiento
+class MantenimientoVehiculo{
+   -fechaMantenimiento: Date
+   -costo: number
+   -modelo: string
+   + setters_y_getters()
+}
+
+class GestorDeMantenimiento{
+   - vehiculosEnMantenimiento: MantenimientoVehiculo[]
+   + registrarMantenimiento(vehiculo: MantenimientoVehiculo) : void
+}
+
+GestorDeMantenimiento o-- MantenimientoVehiculo
+
 ' Dep

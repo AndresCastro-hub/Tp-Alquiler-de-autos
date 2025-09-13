@@ -69,8 +69,8 @@ class GestionDeReservas{
 }
 
 GestionDeReservas *-- Reserva
-Cliente -- Reserva
-Vehiculo -- Reserva
+Cliente *-- Reserva
+Vehiculo *-- Reserva
 
 ' Vehiculos gestion
 class GestionDeVehiculos{

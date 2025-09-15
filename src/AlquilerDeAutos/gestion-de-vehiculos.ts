@@ -1,6 +1,6 @@
-import { Vehiculo }  from './vehiculo';
+import Vehiculo from './vehiculo';
 
-export class GestionDeVehiculos {
+export default class GestionDeVehiculos {
   private vehiculos: Vehiculo[] = [];
 
   public agregarVehiculo(vehiculo: Vehiculo): void {
@@ -9,7 +9,7 @@ export class GestionDeVehiculos {
     );
 
     if (esDuplicado) {
-      throw new Error(`El vehículo con la matrícula ${vehiculo.getMatricula()} ya existe en el sistema.`);
+      throw new Error(`El vehiculo con la matricula ${vehiculo.getMatricula()} ya existe en el sistema `);
     }
 
     this.vehiculos.push(vehiculo);

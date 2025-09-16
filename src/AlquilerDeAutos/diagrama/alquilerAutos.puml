@@ -42,11 +42,16 @@ Vehiculo <|-- Suv
 class Cliente{
    -nombre: string
    -apellido: string
+   -email: string
+   
+   + setters_y_getters()
 }
 
 class GestionDeClientes{
    - clientes: Cliente[]
    + agregarCliente(cliente: Cliente): void
+   + eliminarCliente(cliente: Cliente): void
+   - clienteExiste(cliente: Cliente): boolean
 }
 
 GestionDeClientes *-- Cliente

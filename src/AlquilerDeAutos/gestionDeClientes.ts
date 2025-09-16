@@ -22,7 +22,7 @@ export default class GestionDeClientes {
    }
 
    private clienteExiste(cliente: Cliente): boolean {
-        return !!this.clientes.find(c =>
+        return this.clientes.some(c =>
             ( c.getEmail() === cliente.getEmail() )
         );
    }

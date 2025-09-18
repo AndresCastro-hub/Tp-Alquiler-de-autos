@@ -1,4 +1,4 @@
-import Vehiculo from "./Vehiculo";
+import { Vehiculo } from "./AlquilerDeAutos/Vehiculo";
 
 class testVehiculo extends Vehiculo {
     calcularTarifa(fechaInicio: Date, fechaFin: Date, kmRecorridos: number): number {

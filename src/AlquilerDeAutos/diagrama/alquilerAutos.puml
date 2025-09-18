@@ -23,7 +23,7 @@ abstract class Vehiculo{
    -tarifaBase: number
    -tarifaExtra: number
 
-   + abstract calcularTarifa(totalDelRecorrido: ITotalDelRecorrido): number
+   + abstract calcularTarifa(totalDelRecorrido: ITotalDelRecorrido[]): number
    + actualizarContador(): void
    + setters_y_getters()
 }
@@ -72,10 +72,12 @@ GestionDeClientes *-- Cliente
 class Reserva{
    -cliente: Cliente
    -vehiculo: Vehiculo
-   -informacionDelRecorrido: GestorKilometraje
+   -gestionDelKilometraje: GestorKilometraje
+   -fechaInicioReserva: Date
+   - fechaFinReserva: Date
    
    + getters_y_setters()
-   + calcularCostoTotal(totalDelRecorrido : ITotalDelRecorrido[]) : number
+   + calcularCostoTotal() : number
 }
 
 
@@ -83,6 +85,7 @@ class GestorKilometraje{
    - informacionDelRecorrido: ITotalDelRecorrido[]
    + setKmRecorridoXDia(dia: Date, kmRecorrido: number): void
    + getInformacionDelRecorrido() : ITotalDelRecorrido[]
+   + getTotalKmRecorridos(): number
 }
 
 class GestionDeReservas{

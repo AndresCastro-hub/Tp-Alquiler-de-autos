@@ -11,4 +11,11 @@ export default class GestorKilometraje {
         return this.informacionDelRecorrido;
     }
 
+    public getTotalKmRecorridos(): number {
+        return this.informacionDelRecorrido.reduce(
+            (total, recorrido) => total + recorrido.kmRecorridos,
+            0
+        );
+    }
+
 }

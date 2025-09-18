@@ -1,19 +1,21 @@
-import { Vehiculo } from "./AlquilerDeAutos/Vehiculo";
+import { EstadoVehiculo } from "../enums/EstadoVehiculo";
+import { ITotalDelRecorrido } from "../interfaces/ITotalDelRecorrido";
+import { Vehiculo } from "../Vehiculo";
 
 class testVehiculo extends Vehiculo {
-    calcularTarifa(fechaInicio: Date, fechaFin: Date, kmRecorridos: number): number {
+    calcularTarifa(totalDelRecorrido: ITotalDelRecorrido[]): number {
         throw new Error("Method not implemented.");
     }
-    constructor(matricula: string, estado: string, contadorKm: number, tarifaBase: number, tarifaExtra: number) {
+    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number, tarifaBase: number, tarifaExtra: number) {
         super(matricula, estado, contadorKm, tarifaBase, tarifaExtra);
     }
 }
 describe ("Test de la clase abstracta Vehiculo", () => {
-    const vehiculo = new testVehiculo("ABC123", "disponible", 50, 10000, 0.5);
+    const vehiculo = new testVehiculo("ABC123", EstadoVehiculo.Disponible, 50, 10000, 0.5);
     test ("Verifica que el constructor de la clase Vehiculo instancie un objeto de tipo Vehiculo y asigne correctamente los valores de patente, estado, precioPorDia, duracionMinima, y costoSeguro", () => {
     expect(vehiculo).toBeInstanceOf(Vehiculo);
     expect(vehiculo.getMatricula()).toEqual("ABC123");
-    expect(vehiculo.getEstado()).toEqual("disponible");
+    expect(vehiculo.getEstado()).toEqual(EstadoVehiculo.Disponible);
     expect(vehiculo.getContadorKm()).toEqual(50);
     expect(vehiculo.getTarifaBase()).toEqual(10000);
     expect(vehiculo.getTarifaExtra()).toEqual(0.5);
@@ -31,12 +33,12 @@ describe ("Test de la clase abstracta Vehiculo", () => {
     });
 
     test ("Verificacion del getter de la propiedad estado", () => {
-        const estadoEsperado: string = "disponible";
+        const estadoEsperado: EstadoVehiculo = EstadoVehiculo.Disponible;
         expect(vehiculo.getEstado()).toEqual(estadoEsperado);
     });
     
     test ("Verificacion del setter de la propiedad estado", () => {
-        const nuevoEstado: string = "en alquiler";
+        const nuevoEstado: EstadoVehiculo = EstadoVehiculo.EnAlquiler;
         vehiculo.setEstado(nuevoEstado);
         expect(vehiculo.getEstado()).toEqual(nuevoEstado);
     });

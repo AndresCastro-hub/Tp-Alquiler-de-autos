@@ -1,13 +1,14 @@
+import { EstadoVehiculo } from "./enums/EstadoVehiculo";
 import { ITotalDelRecorrido } from "./interfaces/ITotalDelRecorrido";
 
 export abstract class Vehiculo {
     private matricula: string;
-    private estado: string;
+    private estado: EstadoVehiculo;
     private contadorKm: number;
     private tarifaBase: number;
     private tarifaExtra: number;
 
-    constructor(matricula: string, estado: string, contadorKm: number, tarifaBase: number, tarifaExtra: number) {
+    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number, tarifaBase: number, tarifaExtra: number) {
         this.matricula = matricula;
         this.estado = estado;
         this.contadorKm = contadorKm;
@@ -24,7 +25,7 @@ export abstract class Vehiculo {
     public getEstado(): string {
         return this.estado;
     }
-    public setEstado(estado: string): void {
+    public setEstado(estado: EstadoVehiculo): void {
         this.estado = estado;
     }
     public getContadorKm(): number {
@@ -46,7 +47,7 @@ export abstract class Vehiculo {
         this.tarifaExtra = tarifaExtra;
     }
     
-    abstract calcularTarifa(totalDelRecorrido: ITotalDelRecorrido): number;
+    abstract calcularTarifa(totalDelRecorrido: ITotalDelRecorrido[]): number;
     
     public actualizarContador(km: number): void {
         this.contadorKm += km;

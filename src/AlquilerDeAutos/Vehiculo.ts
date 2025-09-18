@@ -1,3 +1,5 @@
+import { ITotalDelRecorrido } from "./interfaces/ITotalDelRecorrido";
+
 export abstract class Vehiculo {
     private matricula: string;
     private estado: string;
@@ -44,7 +46,7 @@ export abstract class Vehiculo {
         this.tarifaExtra = tarifaExtra;
     }
     
-    abstract calcularTarifa(fechaInicio: Date, fechaFin: Date, kmRecorridos: number): number;
+    abstract calcularTarifa(totalDelRecorrido: ITotalDelRecorrido): number;
     
     public actualizarContador(km: number): void {
         this.contadorKm += km;

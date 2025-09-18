@@ -72,17 +72,17 @@ GestionDeClientes *-- Cliente
 class Reserva{
    -cliente: Cliente
    -vehiculo: Vehiculo
-   -informacionDelRecorrido: ManejarKilometraje
+   -informacionDelRecorrido: GestorKilometraje
    
    + getters_y_setters()
    + calcularCostoTotal(totalDelRecorrido : ITotalDelRecorrido[]) : number
 }
 
-' //Crear la interface y aclarar que duelve el getTotalDelRecorrido
-class ManejarKilometraje{
-   - totalDelRecorrido: ITotalDelRecorrido[]
+
+class GestorKilometraje{
+   - informacionDelRecorrido: ITotalDelRecorrido[]
    + setKmRecorridoXDia(dia: Date, kmRecorrido: number): void
-   + getTotalDelRecorrido() : ITotalDelRecorrido[]
+   + getInformacionDelRecorrido() : ITotalDelRecorrido[]
 }
 
 class GestionDeReservas{
@@ -96,7 +96,7 @@ class GestionDeReservas{
 }
 
 GestionDeReservas *-- Reserva
-ManejarKilometraje o-- Reserva
+GestorKilometraje o-- Reserva
 
 Cliente -- Reserva
 Vehiculo -- Reserva
@@ -136,7 +136,7 @@ class GestorDeMantenimiento{
 GestorDeMantenimiento o-- MantenimientoVehiculo
 Vehiculo ..> EstadoVehiculo : usa
 Vehiculo ..> ITotalDelRecorrido : usa
-ManejarKilometraje ..> ITotalDelRecorrido : usa
+GestorKilometraje ..> ITotalDelRecorrido : usa
 
 
 

@@ -1,5 +1,5 @@
-import { Vehiculo } from '../src/AlquilerDeAutos/vehiculo';
-import GestionDeVehiculos from '../src/AlquilerDeAutos/gestion-de-vehiculos';
+import GestionDeVehiculos from "../AlquilerDeAutos/services/GestionDeVehiculo";
+
 
 const crearVehiculoSimulado = (matricula: string) =>
   ({ getMatricula: () => matricula } as any);

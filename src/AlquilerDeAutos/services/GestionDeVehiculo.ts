@@ -1,4 +1,4 @@
-import Vehiculo from './vehiculo';
+import { Vehiculo } from "../models/Vehiculo";
 
 export default class GestionDeVehiculos {
   private vehiculos: Vehiculo[] = [];

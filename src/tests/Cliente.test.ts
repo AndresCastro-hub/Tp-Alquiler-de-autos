@@ -1,4 +1,4 @@
-import Cliente from "../Cliente";
+import Cliente from "../AlquilerDeAutos/models/Cliente";
 
 describe("Tests de la clase Cliente", () =>{
     const cliente = new Cliente("nombre1", "apellido1", "email@email");

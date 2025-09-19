@@ -1,6 +1,7 @@
-import { EstadoVehiculo } from "./enums/EstadoVehiculo";
-import Reserva from "./Reserva";
-import { Vehiculo } from "./Vehiculo";
+import { EstadoVehiculo } from "../enums/EstadoVehiculo";
+import Reserva from "../models/Reserva";
+import { Vehiculo } from "../models/Vehiculo";
+
 
 export default class GestionDeReservas {
     private reservas: Reserva[];

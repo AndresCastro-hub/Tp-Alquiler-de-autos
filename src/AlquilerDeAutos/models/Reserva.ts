@@ -1,6 +1,5 @@
+import GestorKilometraje from "../services/GestorKilometraje";
 import Cliente from "./Cliente";
-import GestorKilometraje from "./GestorKilometraje";
-import { ITotalDelRecorrido } from "./interfaces/ITotalDelRecorrido";
 import { Vehiculo } from "./Vehiculo";
 
 export default class Reserva {

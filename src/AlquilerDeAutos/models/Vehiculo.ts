@@ -1,5 +1,5 @@
-import { EstadoVehiculo } from "./enums/EstadoVehiculo";
-import { ITotalDelRecorrido } from "./interfaces/ITotalDelRecorrido";
+import { EstadoVehiculo } from "../enums/EstadoVehiculo";
+import RegistroDia from "./RegistroDia";
 
 export abstract class Vehiculo {
     private matricula: string;
@@ -47,7 +47,7 @@ export abstract class Vehiculo {
         this.tarifaExtra = tarifaExtra;
     }
     
-    abstract calcularTarifa(totalDelRecorrido: ITotalDelRecorrido[]): number;
+    abstract calcularTarifa(totalDelRecorrido: RegistroDia[]): number;
     
     public actualizarContador(km: number): void {
         this.contadorKm += km;

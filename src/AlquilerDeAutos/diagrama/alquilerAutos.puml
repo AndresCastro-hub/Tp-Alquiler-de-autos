@@ -10,11 +10,6 @@ enum EstadoVehiculo {
    NecesitaLimpieza
 }
 
-interface ITotalDelRecorrido{
-   dia: Date,
-   kmRecorrido: number
-}
-
 ' Vehiculos
 abstract class Vehiculo{
    -matricula: string
@@ -23,7 +18,7 @@ abstract class Vehiculo{
    -tarifaBase: number
    -tarifaExtra: number
 
-   + abstract calcularTarifa(totalDelRecorrido: ITotalDelRecorrido[]): number
+   + abstract calcularTarifa(totalDelRecorrido: RegistroDia[]): number
    + actualizarContador(): void
    + setters_y_getters()
 }
@@ -31,19 +26,19 @@ abstract class Vehiculo{
 class Compacto{
    -tarifaBase: number
    -tarifaExtra: number
-   + calcularTarifa(totalDelRecorrido: ITotalDelRecorrido): number
+   + calcularTarifa(totalDelRecorrido: RegistroDia): number
 }
 
 class Suv{
    -tarifaBase: number
    -tarifaExtra: number
-   + calcularTarifa(totalDelRecorrido: ITotalDelRecorrido): number
+   + calcularTarifa(totalDelRecorrido: RegistroDia): number
 }
 
 class Sedan{
    -tarifaBase: number
    -tarifaExtra: number
-   + calcularTarifa(totalDelRecorrido: ITotalDelRecorrido): number
+   + calcularTarifa(totalDelRecorrido: RegistroDia): number
 }
 
 Vehiculo <|-- Compacto
@@ -80,11 +75,17 @@ class Reserva{
    + calcularCostoTotal() : number
 }
 
+class RegistroDia{
+   - dia: string
+   - kmRecorrido: number
+   + getters_y_setters()
+}
+
 
 class GestorKilometraje{
-   - informacionDelRecorrido: ITotalDelRecorrido[]
+   - informacionDelRecorrido: RegistroDia[]
    + setKmRecorridoXDia(dia: Date, kmRecorrido: number): void
-   + getInformacionDelRecorrido() : ITotalDelRecorrido[]
+   + getInformacionDelRecorrido() : RegistroDia[]
    + getTotalKmRecorridos(): number
 }
 
@@ -137,10 +138,8 @@ class GestorDeMantenimiento{
 }
 
 GestorDeMantenimiento o-- MantenimientoVehiculo
+GestorKilometraje *-- RegistroDia
+
 Vehiculo ..> EstadoVehiculo : usa
-Vehiculo ..> ITotalDelRecorrido : usa
-GestorKilometraje ..> ITotalDelRecorrido : usa
-
-
 
 ' Dep

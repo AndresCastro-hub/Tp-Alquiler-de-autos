@@ -3,15 +3,22 @@
 title "Drivehub"
 scale 1.3
 
+enum EstadoVehiculo {
+   Disponible
+   EnAlquiler
+   EnMantenimiento
+   NecesitaLimpieza
+}
+
 ' Vehiculos
 abstract class Vehiculo{
    -matricula: string
-   -estado: string
+   -estado: EstadoVehiculo
    -contadorKm: number
    -tarifaBase: number
    -tarifaExtra: number
 
-   + abstract calcularTarifa(fechaInicio: Date, fechaFinal: Date, kmRecorridos: number): number
+   + abstract calcularTarifa(totalDelRecorrido: RegistroDia[]): number
    + actualizarContador(): void
    + setters_y_getters()
 }
@@ -19,19 +26,19 @@ abstract class Vehiculo{
 class Compacto{
    -tarifaBase: number
    -tarifaExtra: number
-   + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+   + calcularTarifa(totalDelRecorrido: RegistroDia): number
 }
 
 class Suv{
    -tarifaBase: number
    -tarifaExtra: number
-   + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+   + calcularTarifa(totalDelRecorrido: RegistroDia): number
 }
 
 class Sedan{
    -tarifaBase: number
    -tarifaExtra: number
-   + calcularTarifa(fechaInicio, fechaFinal, kmRecorridos): number
+   + calcularTarifa(totalDelRecorrido: RegistroDia): number
 }
 
 Vehiculo <|-- Compacto
@@ -42,11 +49,16 @@ Vehiculo <|-- Suv
 class Cliente{
    -nombre: string
    -apellido: string
+   -email: string
+   
+   + setters_y_getters()
 }
 
 class GestionDeClientes{
    - clientes: Cliente[]
    + agregarCliente(cliente: Cliente): void
+   + eliminarCliente(cliente: Cliente): void
+   - clienteExiste(cliente: Cliente): boolean
 }
 
 GestionDeClientes *-- Cliente
@@ -55,22 +67,44 @@ GestionDeClientes *-- Cliente
 class Reserva{
    -cliente: Cliente
    -vehiculo: Vehiculo
-   -fechaInicio: Date
-   -fechaFinal: Date
+   -gestionDelKilometraje: GestorKilometraje
+   -fechaInicioReserva: Date
+   - fechaFinReserva: Date
+   
+   + getters_y_setters()
+   + calcularCostoTotal() : number
+}
 
-   + calcularCostoTotal()
+class RegistroDia{
+   - dia: Date
+   - kmRecorrido: number
+   + getters_y_setters()
+}
+
+
+class GestorKilometraje{
+   - informacionDelRecorrido: RegistroDia[]
+   + setKmRecorridoXDia(dia: Date, kmRecorrido: number): void
+   + getInformacionDelRecorrido() : RegistroDia[]
+   + getTotalKmRecorridos(): number
 }
 
 class GestionDeReservas{
-   -chequearDisponibilidad(): void
    -reservas: Reserva[]
    +agregarReserva(reserva: Reserva): void
-   +cerrarReserva(reserva: Reserva, kmRecorridos: number): number
+   +cerrarReserva(reserva: Reserva): number
+   -chequearDisponibilidad(): void
+   - marcarVehiculoEnAlquiler(vehiculo: Vehiculo) : void
+   - marcarVehiculoNecesitaLimpieza(vehiculo: Vehiculo) : void
+   - actualizarKilometrajeRecorrido(vehiculo: Vehiculo, kmRecorridos: number): void
+   - eliminarReserva(reserva: Reserva): void
 }
 
 GestionDeReservas *-- Reserva
-Cliente *-- Reserva
-Vehiculo *-- Reserva
+GestorKilometraje o-- Reserva
+
+Cliente -- Reserva
+Vehiculo -- Reserva
 
 ' Vehiculos gestion
 class GestionDeVehiculos{
@@ -87,7 +121,7 @@ class GestorDeAlquilerVehicular{
    - gestionDeReservas: GestionDeReservas
 }
 
-GestorDeAlquilerVehicular o-- GestionDeVehiculos 
+GestorDeAlquilerVehicular o-- GestionDeVehiculos
 GestorDeAlquilerVehicular o-- GestionDeReservas
 GestorDeAlquilerVehicular o-- GestionDeClientes
 
@@ -105,5 +139,8 @@ class GestorDeMantenimiento{
 }
 
 GestorDeMantenimiento o-- MantenimientoVehiculo
+GestorKilometraje *-- RegistroDia
+
+Vehiculo ..> EstadoVehiculo : usa
 
 ' Dep

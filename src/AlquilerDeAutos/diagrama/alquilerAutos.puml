@@ -97,6 +97,7 @@ class GestionDeReservas{
    - marcarVehiculoEnAlquiler(vehiculo: Vehiculo) : void
    - marcarVehiculoNecesitaLimpieza(vehiculo: Vehiculo) : void
    - actualizarKilometrajeRecorrido(vehiculo: Vehiculo, kmRecorridos: number): void
+   - eliminarReserva(reserva: Reserva): void
 }
 
 GestionDeReservas *-- Reserva

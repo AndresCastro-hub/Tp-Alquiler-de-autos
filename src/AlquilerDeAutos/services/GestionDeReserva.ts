@@ -31,6 +31,7 @@ export default class GestionDeReservas {
         const cantidadDeKilometrosRecorridos = reserva.getGestionDelKilometraje().getTotalKmRecorridos()
         this.actualizarKilometrajeRecorrido(vehiculo, cantidadDeKilometrosRecorridos)
         this.marcarVehiculoNecesitaLimpieza(vehiculo);
+        this.eliminarReserva(reserva)
         return reserva.calcularCostoTotal();
     }
 
@@ -51,6 +52,11 @@ export default class GestionDeReservas {
         const elVehiculoEstaDisponible = vehiculo.getEstado() === EstadoVehiculo.Disponible
 
         return !existeSuperposicion && elVehiculoEstaDisponible;
+    }
+
+    private eliminarReserva(reserva: Reserva): void{
+        const filtroReservaActual = this.reservas.filter(re => re !== reserva)
+        this.reservas = filtroReservaActual
     }
 
     private marcarVehiculoEnAlquiler(vehiculo: Vehiculo): void {

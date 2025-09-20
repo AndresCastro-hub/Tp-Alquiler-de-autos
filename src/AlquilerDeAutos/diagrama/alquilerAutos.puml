@@ -76,7 +76,7 @@ class Reserva{
 }
 
 class RegistroDia{
-   - dia: string
+   - dia: Date
    - kmRecorrido: number
    + getters_y_setters()
 }

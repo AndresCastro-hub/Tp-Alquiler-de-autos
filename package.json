@@ -13,10 +13,11 @@
     "lint": "npx eslint ./src",
     "start": "node ./dist/index.js",
     "start:dev": "tsc && node ./dist/index.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/AlquilerDeAutos/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/AlquilerDeAutos/main.ts",
     "test": "npx jest tests --runInBand --detectOpenHandles",
     "prebuild": "npm run clean",
-    "lint-fix": "npx eslint ./src --fix"
+    "lint-fix": "npx eslint ./src --fix",
+    "coverage": "npx jest --coverage --runInBand --detectOpenHandles"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",

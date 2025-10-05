@@ -8,7 +8,7 @@ module.exports = {
   coverageReporters: ["clover", "json", "lcov", ["text", { "skipFull": true }]],
   preset: "ts-jest",
   testEnvironment: "node",
-  testMatch: ["<rootDir>/tests/**/*.test.ts"],
+  testMatch: ["<rootDir>/src/tests/**/*.test.ts"],
   testPathIgnorePatterns: [
     "node_modules",
     "tests/data.ts",
@@ -18,7 +18,7 @@ module.exports = {
   testTimeout: 22000,
   verbose: false,
   reporters: [
-    //"default", 
+    "default", 
     ["jest-compact-reporter", { diffs: false, colours: true, showPassingTests: true }],
     ["jest-junit", { outputDirectory: "coverage", usePathForSuiteName: true, reportedFilePath: "absolute" }],
   ],

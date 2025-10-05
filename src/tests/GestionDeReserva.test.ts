@@ -1,4 +1,5 @@
 import { EstadoVehiculo } from "../AlquilerDeAutos/enums/EstadoVehiculo";
+import ErrorVehiculoNoDisponible from "../AlquilerDeAutos/errors/excepcionVehiculoNoDisponible";
 import Cliente from "../AlquilerDeAutos/models/Cliente";
 import RegistroDia from "../AlquilerDeAutos/models/RegistroDia";
 import Reserva from "../AlquilerDeAutos/models/Reserva";
@@ -64,9 +65,12 @@ describe("GestionDeReservas", () => {
       new Date("2025-09-19"),
       new Date("2025-09-22")
     );
-
-    expect(() => gestion.agregarReserva(reservaSuperpuesta))
-      .toThrowError(`El vehículo ${vehiculo.getMatricula()} no está disponible en esas fechas.`);
+    try{
+      gestion.agregarReserva(reservaSuperpuesta);
+    } catch(e) {
+      expect(e).toBeInstanceOf(ErrorVehiculoNoDisponible);
+      expect(e.message).toEqual(`El vehículo ${vehiculo.getMatricula()} no está disponible en esas fechas.`);
+    }
   });
 
   it("debería cerrar una reserva, actualizar km y cambiar estado a 'NecesitaLimpieza'", () => {

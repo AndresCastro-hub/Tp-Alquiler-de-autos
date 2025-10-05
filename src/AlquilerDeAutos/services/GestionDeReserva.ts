@@ -1,4 +1,5 @@
 import { EstadoVehiculo } from "../enums/EstadoVehiculo";
+import ErrorVehiculoNoDisponible from "../errors/excepcionVehiculoNoDisponible";
 import Reserva from "../models/Reserva";
 import { Vehiculo } from "../models/Vehiculo";
 
@@ -19,7 +20,7 @@ export default class GestionDeReservas {
         const elVehiculoEstaDisponible = this.chequearDisponibilidad(vehiculo, fechaInicio, fechaFinal);
 
         if (!elVehiculoEstaDisponible) {
-            throw new Error(`El vehículo ${reserva.getVehiculo().getMatricula()} no está disponible en esas fechas.`);
+            throw new ErrorVehiculoNoDisponible(`El vehículo ${reserva.getVehiculo().getMatricula()} no está disponible en esas fechas.`);
         }
 
         this.reservas.push(reserva);

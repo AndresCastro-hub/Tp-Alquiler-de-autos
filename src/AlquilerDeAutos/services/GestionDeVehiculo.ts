@@ -1,3 +1,4 @@
+import ErrorVehiculoRepetido from "../errors/excepcionVehiculoRepetido";
 import { Vehiculo } from "../models/Vehiculo";
 
 export default class GestionDeVehiculos {
@@ -9,7 +10,7 @@ export default class GestionDeVehiculos {
     );
 
     if (esDuplicado) {
-      throw new Error(`El vehiculo con la matricula ${vehiculo.getMatricula()} ya existe en el sistema `);
+      throw new ErrorVehiculoRepetido(`El vehiculo con la matricula ${vehiculo.getMatricula()} ya existe en el sistema `);
     }
 
     this.vehiculos.push(vehiculo);

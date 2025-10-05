@@ -51,7 +51,7 @@ function main() {
         //console.log(gestor.getGestionDeReservas().getReservas())
 
     } catch (e) {
-        console.log(e)
+        console.log(e.message);
     }
 }
 

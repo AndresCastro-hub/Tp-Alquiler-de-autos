@@ -1,4 +1,6 @@
 import Cliente from "../models/Cliente";
+import ErrorClienteNoExiste from "../errors/excepcionClienteNoExiste";
+import ErrorClienteRepetido from "../errors/excepcionClienteRepetido";
 
 export default class GestionDeClientes {
    private clientes: Cliente[];
@@ -9,14 +11,14 @@ export default class GestionDeClientes {
 
    public agregarCliente(cliente: Cliente): void {
         if(this.clienteExiste(cliente)){
-           throw new Error("El cliente ya esta en el sistema");
+           throw new ErrorClienteRepetido("El cliente ya esta en el sistema");
         }
         this.clientes.push(cliente);
    }
 
    public eliminarCliente(cliente: Cliente): void {
         if(!this.clienteExiste(cliente)){
-            throw new Error("El cliente no esta en el sistema");
+            throw new ErrorClienteNoExiste("El cliente no esta en el sistema");
         }
         this.clientes = this.clientes.filter(c => ( c.getEmail() !== cliente.getEmail() ));
    }

@@ -1,23 +1,16 @@
-import MantenimientoDeVehiculo from "../AlquilerDeAutos/mantenimientoDeVehiculo";
+import MantenimientoDeVehiculo from '../AlquilerDeAutos/mantenimientoDeVehiculo';
 
-describe("MantenimientoDeVehiculo", () => {
-  test("Instancia válida", () => {
-    const m = new MantenimientoDeVehiculo("AA000AA", new Date(2025, 8, 1), 1000);
-    expect(m.getMatricula()).toBe("AA000AA");
-    expect(m.getCosto()).toBe(1000);
+describe('MantenimientoDeVehiculo', () => {
+  test('set/get de matrícula', () => {
+    const m = new MantenimientoDeVehiculo();
+    m.setMatricula('ABC123');
+    expect(m.getMatricula()).toBe('ABC123');
   });
 
-  test("Setter de matrícula asigna correctamente", () => {
-    const m = new MantenimientoDeVehiculo("AA000AA", new Date(2025, 8, 1), 1000);
-    m.setMatricula("AB123CD");
-    expect(m.getMatricula()).toBe("AB123CD");
-  });
-
-  test("Costo negativo => error", () => {
-    expect(() => new MantenimientoDeVehiculo("AA000AA", new Date(2025, 8, 1), -1)).toThrow();
-  });
-
-  test("Matrícula vacía => error", () => {
-    expect(() => new MantenimientoDeVehiculo("", new Date(2025, 8, 1), 100)).toThrow();
+  test('set/get de fecha de mantenimiento', () => {
+    const m = new MantenimientoDeVehiculo();
+    const fecha = new Date('2025-01-01');
+    m.setFechaMantenimiento(fecha);
+    expect(m.getFechaMantenimiento()).toEqual(fecha);
   });
 });

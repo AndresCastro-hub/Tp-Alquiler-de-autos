@@ -9,23 +9,23 @@ export default class MantenimientoDeVehiculo{
         this.matricula = "";
     }
 
-    public setFechaMantenimiento(value: Date){
+    public setFechaMantenimiento(value: Date): void{
         this.fechaDeMantenimiento = value;
     }
 
-    public setMatricula(value:string){
-        this.matricula;
+    public setMatricula(value:string): void{
+        this.matricula = value;
     }
 
-    public getFechaMantenimiento(){
+    public getFechaMantenimiento(): Date{
         return this.fechaDeMantenimiento;
     }
 
-    public getMatricula(){
+    public getMatricula(): string{
         return this.matricula;
     }
 
-    public getCosto(){
+    public getCosto(): number{
         return this.costo;
     }
 }

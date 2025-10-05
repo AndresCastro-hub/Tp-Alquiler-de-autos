@@ -20,7 +20,9 @@ describe("Clase Reserva", () => {
 
     beforeEach(() => {
         cliente = new Cliente("Juan", "Perez", "juan@example.com");
-        vehiculo = new VehiculoMock("ABC123", EstadoVehiculo.Disponible, 0, 100, 20);
+        vehiculo = new VehiculoMock("ABC123", EstadoVehiculo.Disponible, 0);
+        vehiculo.setTarifaBase(100);
+        vehiculo.setTarifaExtra(20);
         gestorKilometraje = new GestorKilometraje();
         reserva = new Reserva(
             cliente,
@@ -41,7 +43,9 @@ describe("Clase Reserva", () => {
 
     test("Debería actualizar cliente y vehículo", () => {
         const nuevoCliente = new Cliente("Ana", "Gomez", "ana@example.com");
-        const nuevoVehiculo = new VehiculoMock("XYZ789", EstadoVehiculo.Disponible, 0, 200, 30);
+        const nuevoVehiculo = new VehiculoMock("XYZ789", EstadoVehiculo.Disponible, 0);
+        vehiculo.setTarifaBase(200);
+        vehiculo.setTarifaExtra(30);
 
         reserva.setCliente(nuevoCliente);
         reserva.setVehiculo(nuevoVehiculo);

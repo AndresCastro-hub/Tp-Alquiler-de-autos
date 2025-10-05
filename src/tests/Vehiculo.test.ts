@@ -6,12 +6,14 @@ class testVehiculo extends Vehiculo {
     calcularTarifa(totalDelRecorrido: RegistroDia[]): number {
         throw new Error("Method not implemented.");
     }
-    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number, tarifaBase: number, tarifaExtra: number) {
-        super(matricula, estado, contadorKm, tarifaBase, tarifaExtra);
+    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number) {
+        super(matricula, estado, contadorKm);
     }
 }
 describe ("Test de la clase abstracta Vehiculo", () => {
-    const vehiculo = new testVehiculo("ABC123", EstadoVehiculo.Disponible, 50, 10000, 0.5);
+    const vehiculo = new testVehiculo("ABC123", EstadoVehiculo.Disponible, 50);
+    vehiculo.setTarifaBase(10000);
+    vehiculo.setTarifaExtra(0.5);
     test ("Verifica que el constructor de la clase Vehiculo instancie un objeto de tipo Vehiculo y asigne correctamente los valores de patente, estado, precioPorDia, duracionMinima, y costoSeguro", () => {
     expect(vehiculo).toBeInstanceOf(Vehiculo);
     expect(vehiculo.getMatricula()).toEqual("ABC123");

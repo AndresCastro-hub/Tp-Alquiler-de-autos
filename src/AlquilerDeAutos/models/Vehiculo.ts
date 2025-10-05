@@ -8,12 +8,12 @@ export abstract class Vehiculo {
     private tarifaBase: number;
     private tarifaExtra: number;
 
-    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number, tarifaBase: number, tarifaExtra: number) {
+    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number) {
         this.matricula = matricula;
         this.estado = estado;
         this.contadorKm = contadorKm;
-        this.tarifaBase = tarifaBase;
-        this.tarifaExtra = tarifaExtra;
+        this.tarifaBase = 0;
+        this.tarifaExtra = 0;
     }
 
     public getMatricula(): string {

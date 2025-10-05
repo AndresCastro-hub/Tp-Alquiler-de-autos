@@ -1,9 +1,10 @@
 import { EstadoVehiculo } from "./enums/EstadoVehiculo"
 import Cliente from "./models/Cliente"
-import Compacto from "./models/Compacto"
+import Compacto from "./compacto"
 import RegistroDia from "./models/RegistroDia"
 import Reserva from "./models/Reserva"
-import Sedan from "./models/Sedan"
+import Sedan from "./sedan"
+import Suv from "./suv"
 import GestionDeAlquilerVehicular from "./services/GestionDeAlquilerVehicular"
 import GestorKilometraje from "./services/GestorKilometraje"
 
@@ -47,7 +48,7 @@ function main() {
         gestor.getGestionDeReservas().cerrarReserva(reservaDos)
         gestor.getGestionDeReservas().cerrarReserva(reservaUno)
         
-        console.log(gestor.getGestionDeReservas().getReservas())
+        //console.log(gestor.getGestionDeReservas().getReservas())
 
     } catch (e) {
         console.log(e)

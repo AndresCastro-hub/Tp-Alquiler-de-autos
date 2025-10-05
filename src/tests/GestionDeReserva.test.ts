@@ -8,7 +8,7 @@ import GestorKilometraje from "../AlquilerDeAutos/services/GestorKilometraje";
 
 class VehiculoMock extends Vehiculo {
   constructor(matricula: string, estado: EstadoVehiculo, km: number) {
-    super(matricula, estado, km, 100, 20);
+    super(matricula, estado, km);
   }
 
   calcularTarifa(totalDelRecorrido: RegistroDia[]): number {
@@ -28,7 +28,9 @@ describe("GestionDeReservas", () => {
   beforeEach(() => {
     gestion = new GestionDeReservas();
     cliente = new Cliente("Juan", "Perez", "juan@example.com");
-    vehiculo = new VehiculoMock("ABC123", EstadoVehiculo.Disponible, 0);
+    vehiculo = new VehiculoMock("ABC123", EstadoVehiculo.Disponible, 0,);
+    vehiculo.setTarifaBase(300);
+    vehiculo.setTarifaExtra(30);
     gestorKm = new GestorKilometraje();
     reserva = new Reserva(
       cliente,

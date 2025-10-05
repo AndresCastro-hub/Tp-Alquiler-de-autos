@@ -4,7 +4,7 @@ export default class MantenimientoDeVehiculo{
     private matricula: string;
 
     constructor(){
-        this.fechaDeMantenimiento = new Date;
+        this.fechaDeMantenimiento = new Date();
         this.costo = 200;
         this.matricula = "";
     }

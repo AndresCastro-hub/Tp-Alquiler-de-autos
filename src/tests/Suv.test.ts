@@ -1,4 +1,4 @@
-import Suv from '../AlquilerDeAutos/suv';
+import Suv from '../AlquilerDeAutos/models/Suv';
 
 const d = (km: number) => ({ getKmRecorrido: () => km } as any);
 

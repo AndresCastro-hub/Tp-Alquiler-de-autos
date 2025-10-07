@@ -1,4 +1,4 @@
-import MantenimientoDeVehiculo from '../AlquilerDeAutos/mantenimientoDeVehiculo';
+import MantenimientoDeVehiculo from "../AlquilerDeAutos/services/MantenimientoDeVehiculo";
 
 describe('MantenimientoDeVehiculo', () => {
   test('set/get de matrícula', () => {

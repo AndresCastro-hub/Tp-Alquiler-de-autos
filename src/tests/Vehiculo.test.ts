@@ -1,9 +1,8 @@
 import { EstadoVehiculo } from "../AlquilerDeAutos/enums/EstadoVehiculo";
-import RegistroDia from "../AlquilerDeAutos/models/RegistroDia";
 import { Vehiculo } from "../AlquilerDeAutos/models/Vehiculo";
 
 class testVehiculo extends Vehiculo {
-    calcularTarifa(totalDelRecorrido: RegistroDia[]): number {
+    calcularTarifa(): number {
         throw new Error("Method not implemented.");
     }
     constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number) {

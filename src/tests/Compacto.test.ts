@@ -1,7 +1,6 @@
-import Compacto from '../AlquilerDeAutos/compacto';
+import Compacto from '../AlquilerDeAutos/models/Compacto';
 import { EstadoVehiculo } from '../AlquilerDeAutos/enums/EstadoVehiculo';
 import RegistroDia from '../AlquilerDeAutos/models/RegistroDia';
-import GestorKilometraje from '../AlquilerDeAutos/services/GestorKilometraje';
 
 const d = (km: number) => ({ getKmRecorrido: () => km } as any);
 

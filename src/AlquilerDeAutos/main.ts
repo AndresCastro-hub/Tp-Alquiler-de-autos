@@ -1,10 +1,10 @@
 import { EstadoVehiculo } from "./enums/EstadoVehiculo"
 import Cliente from "./models/Cliente"
-import Compacto from "./compacto"
+import Compacto from "./models/Compacto"
 import RegistroDia from "./models/RegistroDia"
 import Reserva from "./models/Reserva"
-import Sedan from "./sedan"
-import Suv from "./suv"
+import Sedan from "./models/Sedan"
+import Suv from "./models/Suv"
 import GestionDeAlquilerVehicular from "./services/GestionDeAlquilerVehicular"
 import GestorKilometraje from "./services/GestorKilometraje"
 

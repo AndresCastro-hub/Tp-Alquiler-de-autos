@@ -1,6 +1,6 @@
-import { EstadoVehiculo } from "./enums/EstadoVehiculo";
-import RegistroDia from "./models/RegistroDia.js";
-import { Vehiculo } from "./models/Vehiculo";
+import { EstadoVehiculo } from "../enums/EstadoVehiculo";
+import RegistroDia from "./RegistroDia.js";
+import { Vehiculo } from "./Vehiculo";
 export default class Compacto extends Vehiculo{
 
     constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number){

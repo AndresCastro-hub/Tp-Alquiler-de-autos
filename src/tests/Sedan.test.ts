@@ -1,8 +1,7 @@
 import { EstadoVehiculo } from '../AlquilerDeAutos/enums/EstadoVehiculo';
-import Sedan from '../AlquilerDeAutos/sedan';
+import Sedan from '../AlquilerDeAutos/models/Sedan';
 import RegistroDia from '../AlquilerDeAutos/models/RegistroDia';
 
-const d = (km: number) => ({ getKmRecorrido: () => km } as any);
 
 describe('Sedan', () => {
   test('calcularTarifa con array vacío devuelve 0', () => {

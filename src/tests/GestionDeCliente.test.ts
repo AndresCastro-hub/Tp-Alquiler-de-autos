@@ -1,3 +1,5 @@
+import ErrorClienteNoExiste from "../AlquilerDeAutos/errors/excepcionClienteNoExiste";
+import ErrorClienteRepetido from "../AlquilerDeAutos/errors/excepcionClienteRepetido";
 import Cliente from "../AlquilerDeAutos/models/Cliente";
 import GestionDeClientes from "../AlquilerDeAutos/services/GestionDeCliente";
 
@@ -18,7 +20,8 @@ describe("Tests de la clase GestionDeClientes", ()=>{
         try{
             gestor.agregarCliente(cliente1);
         }catch(error){
-            expect((error as Error).message).toEqual("El cliente ya esta en el sistema");
+            expect(error).toBeInstanceOf(ErrorClienteRepetido);
+            expect(error.message).toEqual("El cliente ya esta en el sistema");
         }
     });
 
@@ -28,7 +31,8 @@ describe("Tests de la clase GestionDeClientes", ()=>{
         try{
             gestor.eliminarCliente(cliente1);
         }catch(error){
-            expect((error as Error).message).toEqual("El cliente no esta en el sistema");
+            expect(error).toBeInstanceOf(ErrorClienteNoExiste);
+            expect(error.message).toEqual("El cliente no esta en el sistema");
         }
     });
 

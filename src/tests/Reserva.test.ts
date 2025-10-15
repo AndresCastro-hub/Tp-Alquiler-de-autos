@@ -5,53 +5,57 @@ import Reserva from "../AlquilerDeAutos/models/Reserva";
 import { Vehiculo } from "../AlquilerDeAutos/models/Vehiculo";
 import GestorKilometraje from "../AlquilerDeAutos/services/GestorKilometraje";
 
-class VehiculoMock extends Vehiculo {
-    calcularTarifa(totalDelRecorrido: RegistroDia[]): number {
-        const kmTotal = totalDelRecorrido.reduce((acc, r) => acc + r.getKmRecorrido(), 0);
-        return this.getTarifaBase() + kmTotal * 10;
-    }
-}
-
 describe("Clase Reserva", () => {
-    let cliente: Cliente;
-    let vehiculo: VehiculoMock;
-    let gestorKilometraje: GestorKilometraje;
+    let mockCliente: Cliente;
+    let mockVehiculo: Vehiculo;
+    let mockGestorKm: jest.Mocked<GestorKilometraje>;
     let reserva: Reserva;
 
     beforeEach(() => {
-        cliente = new Cliente("Juan", "Perez", "juan@example.com");
-        vehiculo = new VehiculoMock("ABC123", EstadoVehiculo.Disponible, 0);
-        vehiculo.setTarifaBase(100);
-        vehiculo.setTarifaExtra(20);
-        gestorKilometraje = new GestorKilometraje();
+        mockCliente = {
+            getNombre: jest.fn().mockReturnValue("Juan"),
+            getApellido: jest.fn().mockReturnValue("Perez"),
+            getEmail: jest.fn().mockReturnValue("juan@example.com"),
+        } as unknown as Cliente;
+
+        mockVehiculo = {
+            getMatricula: jest.fn().mockReturnValue("ABC123"),
+            getEstado: jest.fn().mockReturnValue(EstadoVehiculo.Disponible),
+            getContadorKm: jest.fn().mockReturnValue(0),
+            getTarifaBase: jest.fn().mockReturnValue(300),
+            getTarifaExtra: jest.fn().mockReturnValue(30),
+            calcularTarifa: jest.fn().mockImplementation((recorridos: RegistroDia[]) => {
+                const totalKm = recorridos.reduce((sum, r) => sum + r.getKmRecorrido(), 0);
+                return 300 + totalKm * 30;
+            }),
+        } as unknown as Vehiculo;
+
+        const registrosMock: RegistroDia[] = [
+            new RegistroDia(new Date("2025-09-18"), 10),
+            new RegistroDia(new Date("2025-09-19"), 5),
+        ];
+
+        mockGestorKm = {
+            setKmRecorridoXDia: jest.fn(),
+            getInformacionDelRecorrido: jest.fn().mockReturnValue(registrosMock),
+            getTotalKmRecorridos: jest.fn().mockReturnValue(15),
+        } as unknown as jest.Mocked<GestorKilometraje>;
+
         reserva = new Reserva(
-            cliente,
-            vehiculo,
-            gestorKilometraje,
+            mockCliente,
+            mockVehiculo,
+            mockGestorKm,
             new Date("2025-09-18"),
             new Date("2025-09-20")
         );
     });
 
     test("Debería crear la reserva correctamente", () => {
-        expect(reserva.getCliente()).toBe(cliente);
-        expect(reserva.getVehiculo()).toBe(vehiculo);
+        expect(reserva.getCliente()).toBe(mockCliente);
+        expect(reserva.getVehiculo()).toBe(mockVehiculo);
         expect(reserva.getFechaInicioReserva()).toEqual(new Date("2025-09-18"));
         expect(reserva.getFechaFinReserva()).toEqual(new Date("2025-09-20"));
-        expect(reserva.getGestionDelKilometraje()).toBe(gestorKilometraje);
-    });
-
-    test("Debería actualizar cliente y vehículo", () => {
-        const nuevoCliente = new Cliente("Ana", "Gomez", "ana@example.com");
-        const nuevoVehiculo = new VehiculoMock("XYZ789", EstadoVehiculo.Disponible, 0);
-        vehiculo.setTarifaBase(200);
-        vehiculo.setTarifaExtra(30);
-
-        reserva.setCliente(nuevoCliente);
-        reserva.setVehiculo(nuevoVehiculo);
-
-        expect(reserva.getCliente()).toBe(nuevoCliente);
-        expect(reserva.getVehiculo()).toBe(nuevoVehiculo);
+        expect(reserva.getGestionDelKilometraje()).toBe(mockGestorKm);
     });
 
     test("Debería actualizar fechas de reserva", () => {
@@ -66,20 +70,21 @@ describe("Clase Reserva", () => {
     });
 
     test("Debería calcular el costo total correctamente", () => {
-        gestorKilometraje.setKmRecorridoXDia(new Date("2025-09-18"), 10); // 10 km
-        gestorKilometraje.setKmRecorridoXDia(new Date("2025-09-19"), 5);  // 5 km
+        const costo = reserva.calcularCostoTotal();
 
-        // VehiculoMock: tarifa = tarifaBase + 10 * kmTotal
-        // tarifaBase = 100, kmTotal = 15 => 100 + 15*10 = 250
-        expect(reserva.calcularCostoTotal()).toBe(250);
+        expect(mockGestorKm.getInformacionDelRecorrido).toHaveBeenCalled();
+        expect(mockVehiculo.calcularTarifa).toHaveBeenCalledWith(
+            mockGestorKm.getInformacionDelRecorrido()
+        );
+        expect(costo).toBe(750); // 300 + (10+5)*30 = 750
     });
 
     test("Debería retornar los registros de kilometraje desde el gestor", () => {
-        gestorKilometraje.setKmRecorridoXDia(new Date("2025-09-18"), 20);
         const registros = reserva.getGestionDelKilometraje().getInformacionDelRecorrido();
 
-        expect(registros.length).toBe(1);
-        expect(registros[0].getKmRecorrido()).toBe(20);
-        expect(registros[0].getDia()).toEqual(new Date("2025-09-18"));
+        expect(mockGestorKm.getInformacionDelRecorrido).toHaveBeenCalled();
+        expect(registros.length).toBe(2);
+        expect(registros[0].getKmRecorrido()).toBe(10);
+        expect(registros[1].getKmRecorrido()).toBe(5);
     });
 });

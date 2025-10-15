@@ -1,3 +1,4 @@
+import RegistroDia from "../AlquilerDeAutos/models/RegistroDia";
 import GestorKilometraje from "../AlquilerDeAutos/services/GestorKilometraje";
 
 
@@ -18,7 +19,8 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería agregar un nuevo registro si no existe para la fecha", () => {
-    gestor.setKmRecorridoXDia(fecha1, 50);
+    const diaUno = new RegistroDia(fecha1, 50)
+    gestor.setKmRecorridoXDia(diaUno);
     const registros = gestor.getInformacionDelRecorrido();
 
     expect(registros).toHaveLength(1);
@@ -27,8 +29,10 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería acumular los km si la fecha ya existe", () => {
-    gestor.setKmRecorridoXDia(fecha1, 50);
-    gestor.setKmRecorridoXDia(fecha1, 30); 
+    const diaUno = new RegistroDia(fecha1, 50)
+    const diaDos = new RegistroDia(fecha1, 30)
+    gestor.setKmRecorridoXDia(diaUno);
+    gestor.setKmRecorridoXDia(diaDos); 
 
     const registros = gestor.getInformacionDelRecorrido();
 
@@ -37,8 +41,11 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería manejar múltiples días correctamente", () => {
-    gestor.setKmRecorridoXDia(fecha1, 100);
-    gestor.setKmRecorridoXDia(fecha2, 200);
+    const diaUno = new RegistroDia(fecha1, 100)
+    const diaDos = new RegistroDia(fecha2, 200)
+
+    gestor.setKmRecorridoXDia(diaUno);
+    gestor.setKmRecorridoXDia(diaDos);
 
     const registros = gestor.getInformacionDelRecorrido();
 
@@ -48,8 +55,10 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería calcular el total de km recorridos correctamente", () => {
-    gestor.setKmRecorridoXDia(fecha1, 120);
-    gestor.setKmRecorridoXDia(fecha2, 80);
+    const diaUno = new RegistroDia(fecha1, 120)
+    const diaDos  = new RegistroDia(fecha2, 80)
+    gestor.setKmRecorridoXDia(diaUno);
+    gestor.setKmRecorridoXDia(diaDos);
 
     const total = gestor.getTotalKmRecorridos();
 
@@ -57,8 +66,10 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería actualizar el total si se agregan km a un día existente", () => {
-    gestor.setKmRecorridoXDia(fecha1, 40);
-    gestor.setKmRecorridoXDia(fecha1, 60);
+    const diaTres = new RegistroDia(fecha1,40)
+    const diaCuatro = new RegistroDia(fecha1, 60)
+    gestor.setKmRecorridoXDia(diaTres);
+    gestor.setKmRecorridoXDia(diaCuatro);
 
     expect(gestor.getTotalKmRecorridos()).toBe(100);
   });

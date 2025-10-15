@@ -41,7 +41,7 @@ function main() {
         const diaUno = new RegistroDia(new Date(), 100)
 
         //Arreglar la clase GestorKilometraje para que espere directamente un RegistroDia 
-        reservaUno.getGestionDelKilometraje().setKmRecorridoXDia(new Date(), 100)
+        reservaUno.getGestionDelKilometraje().setKmRecorridoXDia(diaUno)
 
         gestor.getGestionDeReservas().agregarReserva(reservaUno)
         gestor.getGestionDeReservas().agregarReserva(reservaDos)

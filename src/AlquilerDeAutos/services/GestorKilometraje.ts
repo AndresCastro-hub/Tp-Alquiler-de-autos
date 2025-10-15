@@ -7,15 +7,15 @@ export default class GestorKilometraje {
         this.informacionDelRecorrido = []
     }
 
-    public setKmRecorridoXDia(dia: Date, kmRecorridos: number): void {
+    public setKmRecorridoXDia(registro : RegistroDia): void {
         const registroExistente = this.informacionDelRecorrido.find(
-            r => r.getDia().toDateString() === dia.toDateString()
+            r => r.getDia().toDateString() === registro.getDia().toDateString()
         );
 
         if (registroExistente) {
-            registroExistente.setKmRecorrido(registroExistente.getKmRecorrido() + kmRecorridos);
+            registroExistente.setKmRecorrido(registroExistente.getKmRecorrido() + registro.getKmRecorrido());
         } else {
-            this.informacionDelRecorrido.push(new RegistroDia(dia, kmRecorridos));
+            this.informacionDelRecorrido.push(new RegistroDia(registro.getDia(), registro.getKmRecorrido()));
         }
     }
 

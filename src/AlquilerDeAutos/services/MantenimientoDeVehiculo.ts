@@ -1,3 +1,5 @@
+import { COSTO_MANTENIMIENTO } from "../constants/constants";
+
 export default class MantenimientoDeVehiculo{
     private fechaDeMantenimiento: Date;
     private costo: number;
@@ -5,7 +7,7 @@ export default class MantenimientoDeVehiculo{
 
     constructor(){
         this.fechaDeMantenimiento = new Date();
-        this.costo = 200;
+        this.costo = COSTO_MANTENIMIENTO;
         this.matricula = "";
     }
 

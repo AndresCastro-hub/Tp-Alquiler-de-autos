@@ -1,3 +1,4 @@
+import { TARIFAS_AUTOS } from "../constants/constants";
 import { EstadoVehiculo } from "../enums/EstadoVehiculo";
 import RegistroDia from "./RegistroDia.js";
 import { Vehiculo } from "./Vehiculo";
@@ -5,8 +6,8 @@ export default class Compacto extends Vehiculo{
 
     constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number){
         super(matricula, estado, contadorKm);
-        this.setTarifaBase(30);
-        this.setTarifaExtra(0.15);
+        this.setTarifaBase(TARIFAS_AUTOS.COMPACTO.BASE);
+        this.setTarifaExtra(TARIFAS_AUTOS.COMPACTO.EXTRA);
     }
 
     calcularTarifa(totalDelRecorrido: RegistroDia[]): number{

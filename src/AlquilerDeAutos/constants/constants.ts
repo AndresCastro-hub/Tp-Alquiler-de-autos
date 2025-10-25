@@ -15,3 +15,10 @@ export const TARIFAS_AUTOS = {
 }
 
 export const COSTO_MANTENIMIENTO = 200
+
+export const MESES_TEMPORADAS = {
+    TEMPORADA_ALTA: [6, 7, 8],
+    TEMPORADA_MEDIA:[3, 4, 5],
+    TEMPORADA_BAJA: [2, 9],
+
+}

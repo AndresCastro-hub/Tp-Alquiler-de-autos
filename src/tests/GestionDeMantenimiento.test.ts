@@ -28,15 +28,15 @@ describe("GestorDeMantenimiento", () => {
   it("debería registrar un mantenimiento correctamente", () => {
     gestor.registrarMantenimiento(mockMantenimiento);
 
-    expect(gestor["vehiculosEnMantemiento"].length).toBe(1);
-    expect(gestor["vehiculosEnMantemiento"][0]).toBe(mockMantenimiento);
+    expect(gestor["vehiculosEnMantenimiento"].length).toBe(1);
+    expect(gestor["vehiculosEnMantenimiento"][0]).toBe(mockMantenimiento);
   });
 
   it("debería registrar múltiples mantenimientos", () => {
     gestor.registrarMantenimiento(mockMantenimiento);
     gestor.registrarMantenimiento(mockMantenimiento2);
 
-    const registros = gestor["vehiculosEnMantemiento"];
+    const registros = gestor["vehiculosEnMantenimiento"];
 
     expect(registros.length).toBe(2);
     expect(registros[0].getMatricula()).toBe("ABC123");

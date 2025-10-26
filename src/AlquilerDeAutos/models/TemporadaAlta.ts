@@ -8,7 +8,7 @@ export default class TemporadaAlta extends TemporadaBase {
     }
 
     public getPorcentajeDeTemporada(tarifaBase: number) {
-        return tarifaBase + (tarifaBase * 0.20);
+        return tarifaBase * 1.20;
     }
 }
 

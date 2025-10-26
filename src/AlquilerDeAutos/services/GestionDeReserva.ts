@@ -20,7 +20,7 @@ export default class GestionDeReservas {
         const elVehiculoEstaDisponible = this.chequearDisponibilidad(vehiculo, fechaInicio, fechaFinal);
 
         if (!elVehiculoEstaDisponible) {
-            throw new ErrorVehiculoNoDisponible(`El vehículo ${reserva.getVehiculo().getMatricula()} no está disponible en esas fechas.`);
+            throw new ErrorVehiculoNoDisponible(`El vehículo ${reserva.getVehiculo().getMatricula()} no está disponible en esas fechas porque esta en estado: ${vehiculo.getEstado()}.`);
         }
 
         this.reservas.push(reserva);

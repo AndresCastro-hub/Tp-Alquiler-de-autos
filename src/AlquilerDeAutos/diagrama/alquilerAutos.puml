@@ -104,8 +104,8 @@ class GestionDeReservas{
 GestionDeReservas *-- Reserva
 GestorKilometraje o-- Reserva
 
-Cliente -- Reserva
-Vehiculo -- Reserva
+Cliente *-- Reserva
+Vehiculo *-- Reserva
 
 ' Vehiculos gestion
 class GestionDeVehiculos{
@@ -120,11 +120,15 @@ class GestorDeAlquilerVehicular{
    - gestionDeVehiculos: GestionDeVehiculos
    - gestionDeClientes: GestionDeClientes
    - gestionDeReservas: GestionDeReservas
+   - gestionMantenimiento: GestorDeMantenimiento
+   - gestionEstadisticas: GestorEstadisticas
 }
 
 GestorDeAlquilerVehicular o-- GestionDeVehiculos
 GestorDeAlquilerVehicular o-- GestionDeReservas
 GestorDeAlquilerVehicular o-- GestionDeClientes
+GestorDeAlquilerVehicular o-- GestorDeMantenimiento
+GestorDeAlquilerVehicular o-- GestorEstadisticas
 
 ' Mantenimiento
 class MantenimientoVehiculo{
@@ -143,5 +147,37 @@ GestorDeMantenimiento o-- MantenimientoVehiculo
 GestorKilometraje *-- RegistroDia
 
 Vehiculo ..> EstadoVehiculo : usa
+' Reportes y Estadisticas
+
+class GestorEstadisticas {
+   - rentabilidad: EstadisticaDeRentabilidad 
+   - alquiler: EstadisticaDeAlquiler
+   - ocupacion: EstadisticaDeOcupacion
+
+   -- getters y setters -- 
+}
+
+class EstadisticaDeRentabilidad{
+   + mayorRentabilidad(reservas: Reserva[], mantenimiento: MantenimientoVehiculo[]): Vehiculo
+   + menorRentabilidad(reservas: Reserva[], mantenimiento: MantenimientoVehiculo[]): Vehiculo
+
+   - obtenerIngresosPorVehiculo(reservas: Reserva[]): Map<matricula, ingresos>
+   - obtenerCostoMantenimiento(mantenimiento: MantenimientoVehiculo[]): Map<matricula, costo>
+}
+
+class EstadisticaDeAlquiler{
+   + vehiculosMasAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): Vehiculo
+   + vehiculosMenosAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): Vehiculo
+
+   - obtenerAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): Map<matricula, cantReservas>
+}
+
+class EstadisticaDeOcupacion {
+   + ocupacionFlota(vehiculos[]): number
+}
+
+GestorEstadisticas o-- EstadisticaDeRentabilidad
+GestorEstadisticas o-- EstadisticaDeAlquiler
+GestorEstadisticas o-- EstadisticaDeOcupacion
 
 ' Dep

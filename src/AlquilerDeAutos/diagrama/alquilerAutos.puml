@@ -154,7 +154,7 @@ class GestorEstadisticas {
    - alquiler: EstadisticaDeAlquiler
    - ocupacion: EstadisticaDeOcupacion
 
-   -- getters -- 
+   -- getters y setters -- 
 }
 
 class EstadisticaDeRentabilidad{

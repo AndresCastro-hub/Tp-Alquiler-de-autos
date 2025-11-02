@@ -19,7 +19,7 @@ export default class Suv extends Vehiculo {
         let kmTotalesRecorridos = 0;
         let montoExtra = 0;
 
-        for (let i = 1; i < diasTranscurridos; i++) {
+        for (let i = 0; i < diasTranscurridos; i++) {
             kmTotalesRecorridos += totalDelRecorrido[i].getKmRecorrido();
         }
 

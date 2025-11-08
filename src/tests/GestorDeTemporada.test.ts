@@ -3,10 +3,7 @@ import GestorDeTemporada from "../AlquilerDeAutos/services/GestorDeTemporada";
 
 const temporadaMock: TemporadaBase = {
     esValida: jest.fn().mockImplementation((fecha: Date) => {
-        if(fecha === new Date("2022-05-01")) {
-            return true;
-        }
-        return false;
+        return (fecha === new Date("2022-05-01"));
     })
 } as unknown as TemporadaBase;
 

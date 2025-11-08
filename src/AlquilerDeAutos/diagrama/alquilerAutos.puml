@@ -173,7 +173,8 @@ class EstadisticaDeAlquiler{
 }
 
 class EstadisticaDeOcupacion {
-   + ocupacionFlota(vehiculos[]): number
+   - ocupacionFlota(vehiculos[]): number
+   + porcentajeDeOcupacion(vehiculos[]): number
 }
 
 GestorEstadisticas o-- EstadisticaDeRentabilidad

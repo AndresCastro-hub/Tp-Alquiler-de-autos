@@ -12,7 +12,7 @@ export default class Sedan extends Vehiculo {
     }
 
     calcularTarifa(totalDelRecorrido: RegistroDia[], temporada: TemporadaBase): number {
-        let diasTranscurridos = totalDelRecorrido.length;
+        const diasTranscurridos = totalDelRecorrido.length;
         let kmTotalesRecorridos = 0;
 
         for (let i = 0; i < diasTranscurridos; i++) {

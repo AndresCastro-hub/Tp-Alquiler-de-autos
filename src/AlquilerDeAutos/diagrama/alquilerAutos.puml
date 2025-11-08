@@ -42,9 +42,35 @@ class Sedan{
    + calcularTarifa(totalDelRecorrido: RegistroDia): number
 }
 
+abstract class TemporadaBase{
+   - mesesValidos: number[]
+   + esValida(fecha: Date): boolean
+}
+
+class TemporadaAlta{
+   + getPorcentajeDeTemporada(tarifaBase: number) : number
+}
+
+class TemporadaMedia{
+   + getPorcentajeDeTemporada(tarifaBase: number) : number
+}
+
+class TemporadaBaja{
+   + getPorcentajeDeTemporada(tarifaBase: number) : number
+}
+
+
+
 Vehiculo <|-- Compacto
 Vehiculo <|-- Sedan
 Vehiculo <|-- Suv
+
+GestorDeTemporada *-- TemporadaBase
+GestorDeTemporada o-- Reserva
+
+TemporadaBase <|-- TemporadaAlta
+TemporadaBase <|-- TemporadaMedia
+TemporadaBase <|-- TemporadaBaja
 
 ' Clientes
 class Cliente{
@@ -71,6 +97,7 @@ class Reserva{
    -gestionDelKilometraje: GestorKilometraje
    -fechaInicioReserva: Date
    - fechaFinReserva: Date
+   - gestorDeTemporada: GestorDeTemporada
    
    + getters_y_setters()
    + calcularCostoTotal() : number
@@ -80,6 +107,12 @@ class RegistroDia{
    - dia: Date
    - kmRecorrido: number
    + getters_y_setters()
+}
+
+class GestorDeTemporada{
+   - temporadas: TemporadaBase
+   + agregarTemporada(temporada: TemporadaBase):void
+   + getTemporada(fechaInicio: Date) : TemporadaBase
 }
 
 

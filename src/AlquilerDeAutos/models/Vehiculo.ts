@@ -1,5 +1,6 @@
 import { EstadoVehiculo } from "../enums/EstadoVehiculo";
 import RegistroDia from "./RegistroDia";
+import TemporadaBase from "./TemporadaBase";
 
 export abstract class Vehiculo {
     private matricula: string;
@@ -46,9 +47,13 @@ export abstract class Vehiculo {
     public setTarifaExtra(tarifaExtra: number): void {
         this.tarifaExtra = tarifaExtra;
     }
-    
-    abstract calcularTarifa(totalDelRecorrido: RegistroDia[]): number;
-    
+
+    public calcularTarifaBaseSegunTemporada(temporada: TemporadaBase): number {
+        return temporada.getPorcentajeDeTemporada(this.getTarifaBase());
+    }
+
+    abstract calcularTarifa(totalDelRecorrido: RegistroDia[], temporada: TemporadaBase): number;
+
     public actualizarContador(km: number): void {
         this.contadorKm += km;
     }

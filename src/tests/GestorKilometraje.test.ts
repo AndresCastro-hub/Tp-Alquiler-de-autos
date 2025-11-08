@@ -1,11 +1,17 @@
-import RegistroDia from "../AlquilerDeAutos/models/RegistroDia";
 import GestorKilometraje from "../AlquilerDeAutos/services/GestorKilometraje";
-
 
 describe("GestorKilometraje", () => {
   let gestor: GestorKilometraje;
   let fecha1: Date;
   let fecha2: Date;
+
+  const crearRegistroDiaMock = (fecha: Date, km: number) =>
+    ({
+      getDia: jest.fn().mockReturnValue(fecha),
+      getKmRecorrido: jest.fn().mockReturnValue(km),
+      setDia: jest.fn(),
+      setKmRecorrido: jest.fn()
+    } as any);
 
   beforeEach(() => {
     gestor = new GestorKilometraje();
@@ -19,7 +25,7 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería agregar un nuevo registro si no existe para la fecha", () => {
-    const diaUno = new RegistroDia(fecha1, 50)
+    const diaUno = crearRegistroDiaMock(fecha1, 50);
     gestor.setKmRecorridoXDia(diaUno);
     const registros = gestor.getInformacionDelRecorrido();
 
@@ -29,10 +35,10 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería acumular los km si la fecha ya existe", () => {
-    const diaUno = new RegistroDia(fecha1, 50)
-    const diaDos = new RegistroDia(fecha1, 30)
+    const diaUno = crearRegistroDiaMock(fecha1, 50);
+    const diaDos = crearRegistroDiaMock(fecha1, 30);
     gestor.setKmRecorridoXDia(diaUno);
-    gestor.setKmRecorridoXDia(diaDos); 
+    gestor.setKmRecorridoXDia(diaDos);
 
     const registros = gestor.getInformacionDelRecorrido();
 
@@ -41,8 +47,8 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería manejar múltiples días correctamente", () => {
-    const diaUno = new RegistroDia(fecha1, 100)
-    const diaDos = new RegistroDia(fecha2, 200)
+    const diaUno = crearRegistroDiaMock(fecha1, 100);
+    const diaDos = crearRegistroDiaMock(fecha2, 200);
 
     gestor.setKmRecorridoXDia(diaUno);
     gestor.setKmRecorridoXDia(diaDos);
@@ -55,8 +61,8 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería calcular el total de km recorridos correctamente", () => {
-    const diaUno = new RegistroDia(fecha1, 120)
-    const diaDos  = new RegistroDia(fecha2, 80)
+    const diaUno = crearRegistroDiaMock(fecha1, 120);
+    const diaDos = crearRegistroDiaMock(fecha2, 80);
     gestor.setKmRecorridoXDia(diaUno);
     gestor.setKmRecorridoXDia(diaDos);
 
@@ -66,8 +72,8 @@ describe("GestorKilometraje", () => {
   });
 
   it("debería actualizar el total si se agregan km a un día existente", () => {
-    const diaTres = new RegistroDia(fecha1,40)
-    const diaCuatro = new RegistroDia(fecha1, 60)
+    const diaTres = crearRegistroDiaMock(fecha1, 40);
+    const diaCuatro = crearRegistroDiaMock(fecha1, 60);
     gestor.setKmRecorridoXDia(diaTres);
     gestor.setKmRecorridoXDia(diaCuatro);
 

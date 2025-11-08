@@ -118,7 +118,7 @@ class GestorDeTemporada{
 
 class GestorKilometraje{
    - informacionDelRecorrido: RegistroDia[]
-   + setKmRecorridoXDia(dia: Date, kmRecorrido: number): void
+   + setKmRecorridoXDia(registro: RegistroDia): void
    + getInformacionDelRecorrido() : RegistroDia[]
    + getTotalKmRecorridos(): number
 }

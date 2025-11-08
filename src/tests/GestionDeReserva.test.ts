@@ -93,7 +93,7 @@ describe("GestionDeReservas", () => {
       gestion.agregarReserva(reservaMock3);
     }catch(error){
       expect(error).toBeInstanceOf(ErrorVehiculoNoDisponible);
-      expect(error.message).toEqual(`El vehículo ${reservaMock3.getVehiculo().getMatricula()} no está disponible en esas fechas.`);
+      expect(error.message).toEqual(`El vehículo ${reservaMock3.getVehiculo().getMatricula()} no está disponible en esas fechas porque esta en estado: ${vehiculoMock1.getEstado()}.`);
     }
   })
 

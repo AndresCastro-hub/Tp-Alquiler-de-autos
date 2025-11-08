@@ -1,144 +1,147 @@
 import { EstadoVehiculo } from "../AlquilerDeAutos/enums/EstadoVehiculo";
-import Cliente from "../AlquilerDeAutos/models/Cliente";
+import ErrorVehiculoNoDisponible from "../AlquilerDeAutos/errors/excepcionVehiculoNoDisponible";
 import Reserva from "../AlquilerDeAutos/models/Reserva";
 import { Vehiculo } from "../AlquilerDeAutos/models/Vehiculo";
 import GestionDeReservas from "../AlquilerDeAutos/services/GestionDeReserva";
-import GestorKilometraje from "../AlquilerDeAutos/services/GestorKilometraje";
 
-const mockCliente = {
-  getNombre: jest.fn().mockReturnValue("Juan"),
-  getApellido: jest.fn().mockReturnValue("Perez"),
-  getEmail: jest.fn().mockReturnValue("juan@example.com"),
-};
-
-let estadoActual = EstadoVehiculo.Disponible;
-let contadorKm = 0;
-
-const mockVehiculo = {
+let estadoVehiculo1 = EstadoVehiculo.Disponible;
+let contadorKmVehiculo1 = 0;
+const vehiculoMock1: Vehiculo = {
   getMatricula: jest.fn().mockReturnValue("ABC123"),
-  getEstado: jest.fn(() => estadoActual),
-  setEstado: jest.fn((nuevoEstado) => {
-    estadoActual = nuevoEstado;
+  getEstado: jest.fn().mockImplementation(()=> {return estadoVehiculo1} ),
+  setEstado:jest.fn().mockImplementation((estado: EstadoVehiculo)=>{
+    estadoVehiculo1 = estado;
   }),
-  getContadorKm: jest.fn(() => contadorKm),
-  setContadorKm: jest.fn((nuevoKm) => {
-    contadorKm = nuevoKm;
-  }),
-  getTarifaBase: jest.fn().mockReturnValue(300),
-  getTarifaExtra: jest.fn().mockReturnValue(30),
-  calcularTarifa: jest.fn().mockImplementation((recorridos: any[]) => {
-    const totalKm = recorridos.reduce((sum, r) => sum + r.getKmRecorrido(), 0);
-    return 300 + totalKm * 30;
-  }),
-};
+  getContadorKm: jest.fn().mockImplementation(()=> {return contadorKmVehiculo1} ),
+  setContadorKm:jest.fn().mockImplementation((km: number)=>{
+    contadorKmVehiculo1 = km;
+  })
+} as unknown as Vehiculo;
 
-const mockGestorKm = {
-  getTotalKmRecorridos: jest.fn().mockReturnValue(80),
-  setKmRecorridoXDia: jest.fn(),
-  getRegistros: jest.fn().mockReturnValue([
-    { getKmRecorrido: jest.fn().mockReturnValue(50) },
-    { getKmRecorrido: jest.fn().mockReturnValue(30) },
-  ]),
-};
-
-const mockReserva = {
-  getVehiculo: jest.fn().mockReturnValue(mockVehiculo),
-  getCliente: jest.fn().mockReturnValue(mockCliente),
-  getFechaInicioReserva: jest.fn().mockReturnValue(new Date("2025-09-18")),
-  getFechaFinReserva: jest.fn().mockReturnValue(new Date("2025-09-20")),
-  setCliente: jest.fn(),
-  setVehiculo: jest.fn(),
-  setFechaInicioReserva: jest.fn(),
-  setFechaFinReserva: jest.fn(),
-  getGestionDelKilometraje: jest.fn().mockReturnValue(mockGestorKm),
-  calcularCostoTotal: jest.fn().mockImplementation(() => {
-    const registros = mockGestorKm.getRegistros();
-    return mockVehiculo.calcularTarifa(registros);
+const reservaMock1: Reserva = {
+  getVehiculo: jest.fn().mockReturnValue(vehiculoMock1),
+  getFechaInicioReserva: jest.fn().mockReturnValue(new Date("2025-05-20")),
+  getFechaFinReserva: jest.fn().mockReturnValue(new Date("2025-08-20")),
+  getGestionDelKilometraje: jest.fn().mockReturnValue({
+    getTotalKmRecorridos: jest.fn().mockReturnValue(150)
   }),
-  getGestorKm: jest.fn().mockReturnValue(mockGestorKm),
-} as unknown as Reserva;
+  calcularCostoTotal: jest.fn().mockReturnValue(200)
+}as unknown as Reserva;
+
+const reservaMock2: Reserva = {
+  getVehiculo: jest.fn().mockReturnValue({
+    getMatricula: jest.fn().mockReturnValue("DEF456"),
+    getEstado: jest.fn().mockReturnValue(EstadoVehiculo.Disponible),
+    setEstado:jest.fn().mockImplementation((estado: EstadoVehiculo)=>{
+    }),
+  }),
+  getFechaInicioReserva: jest.fn().mockReturnValue(new Date("2025-01-20")),
+  getFechaFinReserva: jest.fn().mockReturnValue(new Date("2025-03-20")),
+}as unknown as Reserva;
+
+const reservaMock3: Reserva = {
+  getVehiculo: jest.fn().mockReturnValue({
+    getMatricula: jest.fn().mockReturnValue("GHI789"),
+    getEstado: jest.fn().mockReturnValue(EstadoVehiculo.EnAlquiler),
+    setEstado:jest.fn().mockImplementation((estado: EstadoVehiculo)=>{
+    }),
+  }),
+  getFechaInicioReserva: jest.fn().mockReturnValue(new Date("2025-09-20")),
+  getFechaFinReserva: jest.fn().mockReturnValue(new Date("2025-10-20")),
+}as unknown as Reserva;
 
 describe("GestionDeReservas", () => {
   let gestion: GestionDeReservas;
 
   beforeEach(() => {
     gestion = new GestionDeReservas();
-    estadoActual = EstadoVehiculo.Disponible;
-    contadorKm = 0;
+    vehiculoMock1.setEstado(EstadoVehiculo.Disponible);
+    vehiculoMock1.setContadorKm(0);
+
+    jest.spyOn(gestion as any, 'actualizarKilometrajeRecorrido');
+    jest.spyOn(gestion as any, 'marcarVehiculoNecesitaLimpieza');
+    jest.spyOn(gestion as any, 'eliminarReserva');
   });
 
   it("debería iniciar sin reservas", () => {
     expect((gestion as any).reservas).toHaveLength(0);
   });
 
-  it("debería agregar una reserva si el vehículo está disponible", () => {
-    gestion.agregarReserva(mockReserva);
-    const reservas = (gestion as any).reservas;
+  it("Test de método chequearDisponibilidad().", ()=>{
+    const vehiculoMock: Vehiculo = {
+      getMatricula: jest.fn().mockReturnValue("ABC123"),
+      getEstado: jest.fn().mockReturnValue(EstadoVehiculo.Disponible)
+    }as unknown as Vehiculo;
 
-    expect(reservas).toHaveLength(1);
-    expect(reservas[0]).toBe(mockReserva);
-    expect(mockVehiculo.setEstado).toHaveBeenCalledWith(EstadoVehiculo.EnAlquiler);
+    expect((gestion as any).chequearDisponibilidad(reservaMock1.getVehiculo(), new Date("2023-05-20"), new Date("2024-05-20"))).toEqual(true);
+    expect((gestion as any).chequearDisponibilidad(reservaMock3.getVehiculo(), new Date("2023-05-20"), new Date("2024-05-20"))).toEqual(false);
+
+    (gestion as any).reservas.push(reservaMock1);
+    expect((gestion as any).chequearDisponibilidad(vehiculoMock, new Date("2025-04-20"), new Date("2025-05-30"))).toEqual(false);
+    expect((gestion as any).chequearDisponibilidad(vehiculoMock, new Date("2025-06-20"), new Date("2025-09-30"))).toEqual(false);
+  })
+
+  it("Test del método agregarReserva().", ()=>{
+    gestion.agregarReserva(reservaMock1);
+    expect(gestion["reservas"]).toHaveLength(1);
+    expect(gestion["reservas"][0]).toEqual(reservaMock1);
+    gestion.agregarReserva(reservaMock2);
+    expect(gestion["reservas"]).toHaveLength(2);
+    expect(gestion["reservas"][0]).toEqual(reservaMock1);
+    expect(gestion["reservas"][1]).toEqual(reservaMock2);
+    try{
+      gestion.agregarReserva(reservaMock3);
+    }catch(error){
+      expect(error).toBeInstanceOf(ErrorVehiculoNoDisponible);
+      expect(error.message).toEqual(`El vehículo ${reservaMock3.getVehiculo().getMatricula()} no está disponible en esas fechas porque esta en estado: ${vehiculoMock1.getEstado()}.`);
+    }
+  })
+
+  it("Test del método eliminarReserva().", ()=>{
+    (gestion as any).reservas.push(reservaMock1);
+    expect(gestion["reservas"]).toHaveLength(1);
+    expect(gestion["reservas"][0]).toEqual(reservaMock1);
+    (gestion as any).eliminarReserva(reservaMock1);
+    expect(gestion["reservas"]).toHaveLength(0);
   });
 
-  it("debería lanzar error si el vehículo no está disponible en esas fechas", () => {
-    gestion.agregarReserva(mockReserva);
-    estadoActual = EstadoVehiculo.EnAlquiler;
+  it("Test del método marcarVehiculoEnAlquiler().", ()=>{
+    expect(vehiculoMock1.getEstado()).toEqual(EstadoVehiculo.Disponible);
+    (gestion as any).marcarVehiculoEnAlquiler(vehiculoMock1);
+    expect(vehiculoMock1.getEstado()).toEqual(EstadoVehiculo.EnAlquiler);
+  });
 
-    const reservaSuperpuesta = new Reserva(
-      mockCliente as unknown as Cliente,
-      mockVehiculo as unknown as Vehiculo,
-      mockGestorKm as unknown as GestorKilometraje,
-      new Date(),
-      new Date()
+  it("Test del método marcarVehiculoNecesitaLimpieza().", ()=>{
+    expect(vehiculoMock1.getEstado()).toEqual(EstadoVehiculo.Disponible);
+    (gestion as any).marcarVehiculoNecesitaLimpieza(vehiculoMock1);
+    expect(vehiculoMock1.getEstado()).toEqual(EstadoVehiculo.NecesitaLimpieza);
+  });
+
+  it("Test del método actualizarKilometrajeRecorrido().", ()=>{
+    expect(vehiculoMock1.getContadorKm()).toEqual(0);
+    (gestion as any).actualizarKilometrajeRecorrido(vehiculoMock1, 100);
+    expect(vehiculoMock1.getContadorKm()).toEqual(100);
+    (gestion as any).actualizarKilometrajeRecorrido(vehiculoMock1, 50);
+    expect(vehiculoMock1.getContadorKm()).toEqual(150);
+  });
+  
+  it("Test del método cerrarReserva().", ()=>{
+    (gestion as any).reservas.push(reservaMock1);
+    const costoTotal = gestion.cerrarReserva(reservaMock1);
+    expect(costoTotal).toEqual(200);
+
+    expect((gestion as any).actualizarKilometrajeRecorrido).toHaveBeenCalledWith(
+        vehiculoMock1, 
+        150
     );
 
-    expect(() => gestion.agregarReserva(reservaSuperpuesta)).toThrow(
-      `El vehículo ${mockVehiculo.getMatricula()} no está disponible en esas fechas.`
-    );
+    expect((gestion as any).marcarVehiculoNecesitaLimpieza).toHaveBeenCalledWith(vehiculoMock1);
+    
+    expect((gestion as any).eliminarReserva).toHaveBeenCalledWith(reservaMock1);
+
+    expect(reservaMock1.calcularCostoTotal).toHaveBeenLastCalledWith();
+
+    expect(reservaMock1.calcularCostoTotal).toHaveBeenCalledTimes(1);
   });
-
-  it("debería cerrar una reserva, actualizar km y cambiar estado a 'NecesitaLimpieza'", () => {
-    mockGestorKm.getTotalKmRecorridos.mockReturnValue(80);
-    gestion.agregarReserva(mockReserva);
-
-    const costoTotal = gestion.cerrarReserva(mockReserva);
-
-    expect(mockVehiculo.setContadorKm).toHaveBeenCalledWith(80);
-    expect(mockVehiculo.setEstado).toHaveBeenCalledWith(EstadoVehiculo.NecesitaLimpieza);
-    expect(costoTotal).toBeGreaterThan(0);
-  });
-
-  it("debería permitir múltiples reservas para distintos vehículos", () => {
-    const otroVehiculo = {
-      getMatricula: jest.fn().mockReturnValue("XYZ789"),
-      getEstado: jest.fn().mockReturnValue(EstadoVehiculo.Disponible),
-      setEstado: jest.fn(),
-      getContadorKm: jest.fn().mockReturnValue(100),
-      setContadorKm: jest.fn(),
-      getTarifaBase: jest.fn().mockReturnValue(400),
-      getTarifaExtra: jest.fn().mockReturnValue(20),
-      calcularTarifa: jest.fn().mockReturnValue(600),
-    } as unknown as Vehiculo;
-
-    const otroGestorKm = {
-      getTotalKmRecorridos: jest.fn().mockReturnValue(50),
-      setKmRecorridoXDia: jest.fn(),
-      getRegistros: jest.fn().mockReturnValue([]),
-    } as unknown as GestorKilometraje;
-
-    const otraReserva = new Reserva(
-      mockCliente as unknown as Cliente,
-      otroVehiculo,
-      otroGestorKm,
-      new Date("2025-09-25"),
-      new Date("2025-09-28")
-    );
-
-    gestion.agregarReserva(mockReserva);
-    gestion.agregarReserva(otraReserva);
-
-    const reservas = (gestion as any).reservas;
-    expect(reservas).toHaveLength(2);
-    expect(reservas[1].getVehiculo()).toBe(otroVehiculo);
-  });
+  
 });

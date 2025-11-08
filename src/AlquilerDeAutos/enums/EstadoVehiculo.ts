@@ -1,6 +1,6 @@
 export enum EstadoVehiculo {
     Disponible = "Disponible",
-    EnAlquiler = "EnAlquiler",
-    EnMantenimiento = "EnMantenimiento",
-    NecesitaLimpieza = "NecesitaLimpieza"
+    EnAlquiler = "Alquiler",
+    EnMantenimiento = "Mantenimiento",
+    NecesitaLimpieza = "Necesita Limpieza"
 }

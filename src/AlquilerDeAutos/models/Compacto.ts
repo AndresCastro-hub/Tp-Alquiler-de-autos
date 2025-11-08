@@ -1,6 +1,7 @@
 import { TARIFAS_AUTOS } from "../constants/constants";
 import { EstadoVehiculo } from "../enums/EstadoVehiculo";
 import RegistroDia from "./RegistroDia.js";
+import TemporadaBase from "./TemporadaBase.js";
 import { Vehiculo } from "./Vehiculo";
 export default class Compacto extends Vehiculo{
 
@@ -10,13 +11,12 @@ export default class Compacto extends Vehiculo{
         this.setTarifaExtra(TARIFAS_AUTOS.COMPACTO.EXTRA);
     }
 
-    calcularTarifa(totalDelRecorrido: RegistroDia[]): number{
+    calcularTarifa(totalDelRecorrido: RegistroDia[], temporada: TemporadaBase): number{
 
-            let diasTranscurridos = totalDelRecorrido.length;
-            let kmExtra = 0;
+        let diasTranscurridos = totalDelRecorrido.length;
+        let kmExtra = 0;
 
-            for (let i = 0; i < diasTranscurridos; i++) {
-
+        for (let i = 0; i < diasTranscurridos; i++) {
             let odometroDiario = totalDelRecorrido[i].getKmRecorrido();
 
             if(odometroDiario > 100){
@@ -24,6 +24,7 @@ export default class Compacto extends Vehiculo{
             }
         }
 
-        return this.getTarifaBase() * diasTranscurridos + kmExtra * this.getTarifaExtra();
+        const tarifaBaseTemporada = this.calcularTarifaBaseSegunTemporada(temporada);
+        return tarifaBaseTemporada * diasTranscurridos + kmExtra * this.getTarifaExtra();
     }
 }

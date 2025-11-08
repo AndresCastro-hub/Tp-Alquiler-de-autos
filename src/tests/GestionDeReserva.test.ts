@@ -3,6 +3,11 @@ import ErrorVehiculoNoDisponible from "../AlquilerDeAutos/errors/excepcionVehicu
 import Reserva from "../AlquilerDeAutos/models/Reserva";
 import { Vehiculo } from "../AlquilerDeAutos/models/Vehiculo";
 import GestionDeReservas from "../AlquilerDeAutos/services/GestionDeReserva";
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 
 let estadoVehiculo1 = EstadoVehiculo.Disponible;
 let contadorKmVehiculo1 = 0;
@@ -32,7 +37,7 @@ const reservaMock2: Reserva = {
   getVehiculo: jest.fn().mockReturnValue({
     getMatricula: jest.fn().mockReturnValue("DEF456"),
     getEstado: jest.fn().mockReturnValue(EstadoVehiculo.Disponible),
-    setEstado:jest.fn().mockImplementation((estado: EstadoVehiculo)=>{
+    setEstado:jest.fn().mockImplementation(()=>{
     }),
   }),
   getFechaInicioReserva: jest.fn().mockReturnValue(new Date("2025-01-20")),
@@ -43,7 +48,7 @@ const reservaMock3: Reserva = {
   getVehiculo: jest.fn().mockReturnValue({
     getMatricula: jest.fn().mockReturnValue("GHI789"),
     getEstado: jest.fn().mockReturnValue(EstadoVehiculo.EnAlquiler),
-    setEstado:jest.fn().mockImplementation((estado: EstadoVehiculo)=>{
+    setEstado:jest.fn().mockImplementation(()=>{
     }),
   }),
   getFechaInicioReserva: jest.fn().mockReturnValue(new Date("2025-09-20")),

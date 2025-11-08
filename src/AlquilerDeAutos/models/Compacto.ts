@@ -13,11 +13,11 @@ export default class Compacto extends Vehiculo{
 
     calcularTarifa(totalDelRecorrido: RegistroDia[], temporada: TemporadaBase): number{
 
-        let diasTranscurridos = totalDelRecorrido.length;
+        const diasTranscurridos = totalDelRecorrido.length;
         let kmExtra = 0;
 
         for (let i = 0; i < diasTranscurridos; i++) {
-            let odometroDiario = totalDelRecorrido[i].getKmRecorrido();
+            const odometroDiario = totalDelRecorrido[i].getKmRecorrido();
 
             if(odometroDiario > 100){
                 kmExtra += (odometroDiario - 100);

@@ -2,13 +2,16 @@ import { EstadoVehiculo } from "../enums/EstadoVehiculo";
 import ErrorVehiculoNoDisponible from "../errors/excepcionVehiculoNoDisponible";
 import Reserva from "../models/Reserva";
 import { Vehiculo } from "../models/Vehiculo";
+import GestorDeMantenimiento from "./GestionDeMantenimiento";
 
 
 export default class GestionDeReservas {
     private reservas: Reserva[];
+    private gestorMantenimiento: GestorDeMantenimiento;
 
-    constructor() {
+    constructor(gestorDeMantenimiento: GestorDeMantenimiento) {
         this.reservas = [];
+        this.gestorMantenimiento = gestorDeMantenimiento;
     }
 
     public agregarReserva(reserva: Reserva): void {
@@ -31,7 +34,9 @@ export default class GestionDeReservas {
         const vehiculo = reserva.getVehiculo();
         const cantidadDeKilometrosRecorridos = reserva.getGestionDelKilometraje().getTotalKmRecorridos()
         this.actualizarKilometrajeRecorrido(vehiculo, cantidadDeKilometrosRecorridos)
-        this.marcarVehiculoNecesitaLimpieza(vehiculo);
+
+        this.procesarMantenimiento(vehiculo);
+
         this.eliminarReserva(reserva)
         return reserva.calcularCostoTotal();
     }
@@ -55,7 +60,7 @@ export default class GestionDeReservas {
         return !existeSuperposicion && elVehiculoEstaDisponible;
     }
 
-    private eliminarReserva(reserva: Reserva): void{
+    private eliminarReserva(reserva: Reserva): void {
         const filtroReservaActual = this.reservas.filter(re => re !== reserva)
         this.reservas = filtroReservaActual
     }
@@ -64,13 +69,18 @@ export default class GestionDeReservas {
         vehiculo.setEstado(EstadoVehiculo.EnAlquiler);
     }
 
-    private marcarVehiculoNecesitaLimpieza(vehiculo: Vehiculo): void {
-        vehiculo.setEstado(EstadoVehiculo.NecesitaLimpieza);
-    }
-
     private actualizarKilometrajeRecorrido(vehiculo: Vehiculo, kmRecorridos: number): void {
         const kmFinal = vehiculo.getContadorKm() + kmRecorridos;
         vehiculo.setContadorKm(kmFinal);
+    }
+
+    private procesarMantenimiento(vehiculo: Vehiculo): void {
+        vehiculo.incrementarAlquiler();
+
+        if (vehiculo.necesitaMantenimiento()) {
+            vehiculo.setEstado(EstadoVehiculo.EnMantenimiento);
+            vehiculo.registrarMantenimiento(this.gestorMantenimiento);
+        }
     }
 
 }

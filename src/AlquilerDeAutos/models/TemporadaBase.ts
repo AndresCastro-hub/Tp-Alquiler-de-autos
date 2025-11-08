@@ -1,9 +1,6 @@
 
 export default abstract class TemporadaBase{
-    private mesesValidos: number[];
-
-    constructor(meses: number[]) {
-        this.mesesValidos = meses;
+    constructor(private mesesValidos: number[]) {
     }
 
     esValida(fecha: Date): boolean {

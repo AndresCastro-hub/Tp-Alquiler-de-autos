@@ -15,10 +15,11 @@ export default class Sedan extends Vehiculo {
         let diasTranscurridos = totalDelRecorrido.length;
         let kmTotalesRecorridos = 0;
 
-        for (let i = 1; i < diasTranscurridos; i++) {
+        for (let i = 0; i < diasTranscurridos; i++) {
             kmTotalesRecorridos += totalDelRecorrido[i].getKmRecorrido();
         }
-                const tarifaBaseTemporada = this.calcularTarifaBaseSegunTemporada(temporada);
+
+        const tarifaBaseTemporada = this.calcularTarifaBaseSegunTemporada(temporada);
 
         return diasTranscurridos * tarifaBaseTemporada + kmTotalesRecorridos * this.getTarifaExtra();
     }

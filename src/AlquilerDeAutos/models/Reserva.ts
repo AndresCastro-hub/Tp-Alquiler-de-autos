@@ -4,30 +4,14 @@ import Cliente from "./Cliente";
 import { Vehiculo } from "./Vehiculo";
 
 export default class Reserva {
-    private cliente: Cliente;
-    private vehiculo: Vehiculo;
-    private gestionDelKilometraje: GestorKilometraje;
-    private fechaInicioReserva: Date;
-    private fechaFinReserva: Date;
-    private gestorDeTemporada: GestorDeTemporada
-
     constructor(
-        cliente: Cliente, 
-        vehiculo: Vehiculo, 
-        gestionDelKilometraje: GestorKilometraje, 
-        fechaInicioReserva: Date, 
-        fechaFinReserva: Date,
-        gestorDeTemporada: GestorDeTemporada
-        
-    ) {
-        this.cliente = cliente
-        this.vehiculo = vehiculo
-        this.gestionDelKilometraje = gestionDelKilometraje
-        this.fechaInicioReserva = fechaInicioReserva;
-        this.fechaFinReserva = fechaFinReserva;
-        this.gestorDeTemporada = gestorDeTemporada
-    }
-
+        private cliente: Cliente,
+        private vehiculo: Vehiculo,
+        private gestionDelKilometraje: GestorKilometraje,
+        private fechaInicioReserva: Date,
+        private fechaFinReserva: Date,
+        private gestorDeTemporada: GestorDeTemporada
+    ) {}
 
     public getCliente(): Cliente {
         return this.cliente;

@@ -1,22 +1,50 @@
-import Compacto from '../AlquilerDeAutos/compacto';
+import Compacto from '../AlquilerDeAutos/models/Compacto';
+import { TARIFAS_AUTOS } from "../AlquilerDeAutos/constants/constants";
 import { EstadoVehiculo } from '../AlquilerDeAutos/enums/EstadoVehiculo';
 import RegistroDia from '../AlquilerDeAutos/models/RegistroDia';
-import GestorKilometraje from '../AlquilerDeAutos/services/GestorKilometraje';
+import TemporadaBase from '../AlquilerDeAutos/models/TemporadaBase';
 
-const d = (km: number) => ({ getKmRecorrido: () => km } as any);
+const registroDiaMock: RegistroDia[] = [
+  {getKmRecorrido: jest.fn().mockReturnValue(110)},
+  {getKmRecorrido: jest.fn().mockReturnValue(120)},
+  {getKmRecorrido: jest.fn().mockReturnValue(130)},
+  {getKmRecorrido: jest.fn().mockReturnValue(90)},
+  {getKmRecorrido: jest.fn().mockReturnValue(80)}
+] as unknown as RegistroDia[];
 
-describe('Compacto', () => {
-  test('calcularTarifa con array vacío devuelve la tarifa base', () => {
-    const registroDia = new RegistroDia(new Date(), 0);
-    const totalDelRecorrido = [];
-    totalDelRecorrido.push(registroDia);
-    const c = new Compacto('ABC123', EstadoVehiculo.Disponible, 0,);
-    expect(c.calcularTarifa(totalDelRecorrido)).toBe(30);
+const temporadaMock: TemporadaBase = {
+  getPorcentajeDeTemporada: jest.fn().mockImplementation((tarifaBase: number) => {
+      return tarifaBase*1.2;
+  })
+} as unknown as TemporadaBase;
+
+describe('Test de la clase Compacto', () => {
+  let compacto: Compacto;
+
+  beforeEach(()=>{
+    compacto = new Compacto("ABC123", EstadoVehiculo.Disponible, 0);
   });
 
-  test('1 día con 90 km (sin extra) cobra sólo la tarifa base (30)', () => {
-    const c = new Compacto('ABC123', EstadoVehiculo.Disponible, 0);
-    const total = c.calcularTarifa([d(90)]);
-    expect(total).toBe(30);
+  test ("Verifica que el constructor de la clase Compacto instancie un objeto de tipo Compacto y asigne correctamente los valores de patente, estado, contadorKm, TarifaBase, y TarifaExtra", () => {
+    expect(compacto).toBeInstanceOf(Compacto);
+    expect(compacto.getMatricula()).toEqual("ABC123");
+    expect(compacto.getEstado()).toEqual(EstadoVehiculo.Disponible);
+    expect(compacto.getContadorKm()).toEqual(0);
+    expect(compacto.getTarifaBase()).toEqual(TARIFAS_AUTOS.COMPACTO.BASE);
+    expect(compacto.getTarifaExtra()).toEqual(TARIFAS_AUTOS.COMPACTO.EXTRA);
   });
+
+  test('Verifica calcularTarifa', () => {
+    const registroDiaMock2: RegistroDia[] = [] as unknown as RegistroDia[];
+    expect(compacto.calcularTarifa(registroDiaMock2,temporadaMock)).toBe(0);
+
+
+    const tarifaBaseEsperada = TARIFAS_AUTOS.COMPACTO.BASE*1.2;
+    const diasTranscurridosEsperados = 5;
+    const kmExtraEsperados = 60;
+    const tarifaExtraEsperada = TARIFAS_AUTOS.COMPACTO.EXTRA;
+    const resultadoEsperado: number = tarifaBaseEsperada * diasTranscurridosEsperados + kmExtraEsperados * tarifaExtraEsperada;
+    expect(compacto.calcularTarifa(registroDiaMock,temporadaMock)).toEqual(resultadoEsperado);
+  });
+
 });

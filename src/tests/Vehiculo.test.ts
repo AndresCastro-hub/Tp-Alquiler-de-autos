@@ -1,26 +1,38 @@
 import { EstadoVehiculo } from "../AlquilerDeAutos/enums/EstadoVehiculo";
-import RegistroDia from "../AlquilerDeAutos/models/RegistroDia";
+import TemporadaBase from "../AlquilerDeAutos/models/TemporadaBase";
 import { Vehiculo } from "../AlquilerDeAutos/models/Vehiculo";
 
 class testVehiculo extends Vehiculo {
-    calcularTarifa(totalDelRecorrido: RegistroDia[]): number {
+    calcularTarifa(): number {
         throw new Error("Method not implemented.");
     }
     constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number) {
         super(matricula, estado, contadorKm);
     }
 }
+
+const temporadaMock: TemporadaBase = {
+    getPorcentajeDeTemporada: jest.fn().mockImplementation((tarifaBase: number) => {
+        return tarifaBase*1.2;
+    })
+} as unknown as TemporadaBase;
+
 describe ("Test de la clase abstracta Vehiculo", () => {
-    const vehiculo = new testVehiculo("ABC123", EstadoVehiculo.Disponible, 50);
-    vehiculo.setTarifaBase(10000);
-    vehiculo.setTarifaExtra(0.5);
+    let vehiculo: Vehiculo;
+    
+    beforeEach(() => {
+        vehiculo = new testVehiculo("ABC123", EstadoVehiculo.Disponible, 50);
+        vehiculo.setTarifaBase(10000);
+        vehiculo.setTarifaExtra(0.5);
+    });
+
     test ("Verifica que el constructor de la clase Vehiculo instancie un objeto de tipo Vehiculo y asigne correctamente los valores de patente, estado, precioPorDia, duracionMinima, y costoSeguro", () => {
-    expect(vehiculo).toBeInstanceOf(Vehiculo);
-    expect(vehiculo.getMatricula()).toEqual("ABC123");
-    expect(vehiculo.getEstado()).toEqual(EstadoVehiculo.Disponible);
-    expect(vehiculo.getContadorKm()).toEqual(50);
-    expect(vehiculo.getTarifaBase()).toEqual(10000);
-    expect(vehiculo.getTarifaExtra()).toEqual(0.5);
+        expect(vehiculo).toBeInstanceOf(Vehiculo);
+        expect(vehiculo.getMatricula()).toEqual("ABC123");
+        expect(vehiculo.getEstado()).toEqual(EstadoVehiculo.Disponible);
+        expect(vehiculo.getContadorKm()).toEqual(50);
+        expect(vehiculo.getTarifaBase()).toEqual(10000);
+        expect(vehiculo.getTarifaExtra()).toEqual(0.5);
     });
 
     test ("Verificacion del getter de la propiedad matricula", () => {
@@ -77,7 +89,12 @@ describe ("Test de la clase abstracta Vehiculo", () => {
         vehiculo.setTarifaExtra(nuevaTarifaExtra);
         expect(vehiculo.getTarifaExtra()).toEqual(nuevaTarifaExtra);
     });
-    
+
+    test ("Verificacion del metodo calcularTarifaBaseSegunTemporada", () => {
+        const tarifaEsperada = vehiculo.calcularTarifaBaseSegunTemporada(temporadaMock);
+        expect(tarifaEsperada).toEqual(12000);
+    });
+
     test ("Verificacion del metodo actualizarContador", () => {
         const kmRecorridos: number = 30;
         const contadorKmInicial: number = vehiculo.getContadorKm();
@@ -85,4 +102,3 @@ describe ("Test de la clase abstracta Vehiculo", () => {
         expect(vehiculo.getContadorKm()).toEqual(contadorKmInicial + kmRecorridos);
     });
 });
-

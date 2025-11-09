@@ -1,10 +1,10 @@
 import { EstadoVehiculo } from "./enums/EstadoVehiculo"
 import Cliente from "./models/Cliente"
-import Compacto from "./compacto"
+import Compacto from "./models/Compacto"
 import RegistroDia from "./models/RegistroDia"
 import Reserva from "./models/Reserva"
-import Sedan from "./sedan"
-import Suv from "./suv"
+import Sedan from "./models/Sedan"
+import Suv from "./models/Suv"
 import GestionDeAlquilerVehicular from "./services/GestionDeAlquilerVehicular"
 import GestorKilometraje from "./services/GestorKilometraje"
 
@@ -41,7 +41,7 @@ function main() {
         const diaUno = new RegistroDia(new Date(), 100)
 
         //Arreglar la clase GestorKilometraje para que espere directamente un RegistroDia 
-        reservaUno.getGestionDelKilometraje().setKmRecorridoXDia(new Date(), 100)
+        reservaUno.getGestionDelKilometraje().setKmRecorridoXDia(diaUno)
 
         gestor.getGestionDeReservas().agregarReserva(reservaUno)
         gestor.getGestionDeReservas().agregarReserva(reservaDos)
@@ -51,7 +51,7 @@ function main() {
         //console.log(gestor.getGestionDeReservas().getReservas())
 
     } catch (e) {
-        console.log(e)
+        console.log(e.message);
     }
 }
 

@@ -42,9 +42,35 @@ class Sedan{
    + calcularTarifa(totalDelRecorrido: RegistroDia): number
 }
 
+abstract class TemporadaBase{
+   - mesesValidos: number[]
+   + esValida(fecha: Date): boolean
+}
+
+class TemporadaAlta{
+   + getPorcentajeDeTemporada(tarifaBase: number) : number
+}
+
+class TemporadaMedia{
+   + getPorcentajeDeTemporada(tarifaBase: number) : number
+}
+
+class TemporadaBaja{
+   + getPorcentajeDeTemporada(tarifaBase: number) : number
+}
+
+
+
 Vehiculo <|-- Compacto
 Vehiculo <|-- Sedan
 Vehiculo <|-- Suv
+
+GestorDeTemporada *-- TemporadaBase
+GestorDeTemporada o-- Reserva
+
+TemporadaBase <|-- TemporadaAlta
+TemporadaBase <|-- TemporadaMedia
+TemporadaBase <|-- TemporadaBaja
 
 ' Clientes
 class Cliente{
@@ -71,6 +97,7 @@ class Reserva{
    -gestionDelKilometraje: GestorKilometraje
    -fechaInicioReserva: Date
    - fechaFinReserva: Date
+   - gestorDeTemporada: GestorDeTemporada
    
    + getters_y_setters()
    + calcularCostoTotal() : number
@@ -82,10 +109,16 @@ class RegistroDia{
    + getters_y_setters()
 }
 
+class GestorDeTemporada{
+   - temporadas: TemporadaBase
+   + agregarTemporada(temporada: TemporadaBase):void
+   + getTemporada(fechaInicio: Date) : TemporadaBase
+}
+
 
 class GestorKilometraje{
    - informacionDelRecorrido: RegistroDia[]
-   + setKmRecorridoXDia(dia: Date, kmRecorrido: number): void
+   + setKmRecorridoXDia(registro: RegistroDia): void
    + getInformacionDelRecorrido() : RegistroDia[]
    + getTotalKmRecorridos(): number
 }
@@ -104,8 +137,8 @@ class GestionDeReservas{
 GestionDeReservas *-- Reserva
 GestorKilometraje o-- Reserva
 
-Cliente -- Reserva
-Vehiculo -- Reserva
+Cliente *-- Reserva
+Vehiculo *-- Reserva
 
 ' Vehiculos gestion
 class GestionDeVehiculos{
@@ -120,11 +153,15 @@ class GestorDeAlquilerVehicular{
    - gestionDeVehiculos: GestionDeVehiculos
    - gestionDeClientes: GestionDeClientes
    - gestionDeReservas: GestionDeReservas
+   - gestionMantenimiento: GestorDeMantenimiento
+   - gestionEstadisticas: GestorEstadisticas
 }
 
 GestorDeAlquilerVehicular o-- GestionDeVehiculos
 GestorDeAlquilerVehicular o-- GestionDeReservas
 GestorDeAlquilerVehicular o-- GestionDeClientes
+GestorDeAlquilerVehicular o-- GestorDeMantenimiento
+GestorDeAlquilerVehicular o-- GestorEstadisticas
 
 ' Mantenimiento
 class MantenimientoVehiculo{
@@ -143,5 +180,38 @@ GestorDeMantenimiento o-- MantenimientoVehiculo
 GestorKilometraje *-- RegistroDia
 
 Vehiculo ..> EstadoVehiculo : usa
+' Reportes y Estadisticas
+
+class GestorEstadisticas {
+   - rentabilidad: EstadisticaDeRentabilidad 
+   - alquiler: EstadisticaDeAlquiler
+   - ocupacion: EstadisticaDeOcupacion
+
+   -- getters y setters -- 
+}
+
+class EstadisticaDeRentabilidad{
+   + mayorRentabilidad(reservas: Reserva[], mantenimiento: MantenimientoVehiculo[]): Vehiculo
+   + menorRentabilidad(reservas: Reserva[], mantenimiento: MantenimientoVehiculo[]): Vehiculo
+
+   - obtenerIngresosPorVehiculo(reservas: Reserva[]): Map<matricula, ingresos>
+   - obtenerCostoMantenimiento(mantenimiento: MantenimientoVehiculo[]): Map<matricula, costo>
+}
+
+class EstadisticaDeAlquiler{
+   + vehiculosMasAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): string
+   + vehiculosMenosAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): string
+
+   - obtenerMaximoMinimo(reservas: Reserva[], fechaInicio: Date, fechaFin: Date, obtenerMaximo?: boolean): string
+}
+
+class EstadisticaDeOcupacion {
+   - ocupacionFlota(vehiculos[]): number
+   + porcentajeDeOcupacion(vehiculos[]): number
+}
+
+GestorEstadisticas o-- EstadisticaDeRentabilidad
+GestorEstadisticas o-- EstadisticaDeAlquiler
+GestorEstadisticas o-- EstadisticaDeOcupacion
 
 ' Dep

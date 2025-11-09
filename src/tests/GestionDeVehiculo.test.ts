@@ -1,3 +1,4 @@
+import ErrorVehiculoRepetido from "../AlquilerDeAutos/errors/excepcionVehiculoRepetido";
 import GestionDeVehiculos from "../AlquilerDeAutos/services/GestionDeVehiculo";
 
 
@@ -18,8 +19,12 @@ describe('Tests para la clase GestionDeVehiculos', () => {
 
   it('Debe rechazar un vehículo con matricula duplicada exacta', () => {
     const vehiculo = crearVehiculoSimulado('ABC123');
-    gestorDeVehiculos.agregarVehiculo(vehiculo);
-    expect(() => gestorDeVehiculos.agregarVehiculo(vehiculo)).toThrow(/ya existe/);
+    try{
+      gestorDeVehiculos.agregarVehiculo(vehiculo);
+    } catch(e){
+      expect(e).toBeInstanceOf(ErrorVehiculoRepetido);
+      expect(e.message).toEqual(`El vehiculo con la matricula ${vehiculo.getMatricula()} ya existe en el sistema `);
+    }
   });
 
   it('Debe rechazar duplicados sin distinguir mayusculas/minusculas', () => {

@@ -72,12 +72,11 @@ export abstract class Vehiculo {
         this.mantenimiento.incrementarAlquiler();
     }
 
-    public registrarMantenimiento(gestor: GestorDeMantenimiento): void {
-        const mantenimiento = new MantenimientoDeVehiculo();
-        mantenimiento.setMatricula(this.matricula);
-        mantenimiento.setFechaMantenimiento(new Date());
-        gestor.registrarMantenimiento(mantenimiento);
-        this.mantenimiento.resetearValores(this.contadorKm)
-        this.estado = EstadoVehiculo.EnMantenimiento;
+    public resetearValoresMantenimiento(): void {
+        this.mantenimiento.resetearValores();
+    }
+
+    public actualizarKMRecorridos(kmRecorridos: number): void{
+        this.setContadorKm(this.getContadorKm() + kmRecorridos);
     }
 }

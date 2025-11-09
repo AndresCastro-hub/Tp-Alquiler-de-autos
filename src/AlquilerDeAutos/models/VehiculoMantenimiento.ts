@@ -1,3 +1,5 @@
+import { CONDICIONES_DESDE_ULTIMO_MANTENIMIENTO } from "../constants/constants";
+
 export class VehiculoMantenimiento {
 
     private fechaUltimoMantenimiento: Date;
@@ -12,8 +14,14 @@ export class VehiculoMantenimiento {
 
     public necesitaMantenimiento(contadorActual: number): boolean {
         const kmDesdeMantenimiento = contadorActual - this.kmDelUltimoMantenimiento;
+        this.kmDelUltimoMantenimiento += contadorActual;
         const meses = this.mesesDesdeUltimoMantenimiento(this.fechaUltimoMantenimiento);
-        return kmDesdeMantenimiento >= 10000 || meses >= 12 || this.alquileresDesdeUltimoMantenimiento >= 5;
+
+        return (
+            kmDesdeMantenimiento >= CONDICIONES_DESDE_ULTIMO_MANTENIMIENTO.KM_RECORRIDOS
+            || meses >= CONDICIONES_DESDE_ULTIMO_MANTENIMIENTO.MESES
+            || this.alquileresDesdeUltimoMantenimiento >= CONDICIONES_DESDE_ULTIMO_MANTENIMIENTO.ALQUILERES
+        );
     }
 
     private mesesDesdeUltimoMantenimiento(fecha: Date): number {
@@ -25,9 +33,9 @@ export class VehiculoMantenimiento {
         this.alquileresDesdeUltimoMantenimiento++;
     }
 
-    public resetearValores(kmActual: number): void {
+    public resetearValores(): void {
         this.fechaUltimoMantenimiento = new Date();
-        this.kmDelUltimoMantenimiento = kmActual;
+        this.kmDelUltimoMantenimiento = 0;
         this.alquileresDesdeUltimoMantenimiento = 0;
     }
 

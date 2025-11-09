@@ -199,10 +199,10 @@ class EstadisticaDeRentabilidad{
 }
 
 class EstadisticaDeAlquiler{
-   + vehiculosMasAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): Vehiculo
-   + vehiculosMenosAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): Vehiculo
+   + vehiculosMasAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): void
+   + vehiculosMenosAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): void
 
-   - obtenerAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): Map<matricula, cantReservas>
+   - obtenerMaximoMinimo(reservas: Reserva[], fechaInicio: Date, fechaFin: Date, obtenerMaximo?: boolean): string
 }
 
 class EstadisticaDeOcupacion {

@@ -3,15 +3,15 @@ import Reserva from "../models/Reserva";
 
 export default class EstadisticasDeAlquiler {
 
-    public vehiculoMasAlquilado(reservas: Array<Reserva>, fechaInicio: Date, fechaFin: Date) {
-        this.obtenerMaximoMinimo(reservas, fechaInicio , fechaFin, true)
+    public vehiculoMasAlquilado(reservas: Array<Reserva>, fechaInicio: Date, fechaFin: Date): string{
+        return this.obtenerMaximoMinimo(reservas, fechaInicio , fechaFin, true);
+    }   
+
+    public vehiculoMinimoAlquilado(reservas: Array<Reserva>, fechaInicio: Date, fechaFin: Date): string{
+        return this.obtenerMaximoMinimo(reservas, fechaInicio, fechaFin);
     }
 
-    public vehiculoMinimoAlquilado(reservas: Array<Reserva>, fechaInicio: Date, fechaFin: Date) {
-        this.obtenerMaximoMinimo(reservas, fechaInicio, fechaFin)
-    }
-
-    private obtenerMaximoMinimo(reservas: Array<Reserva>, fechaInicio: Date, fechaFin: Date, obtenerMaximo?: boolean) {
+    private obtenerMaximoMinimo(reservas: Array<Reserva>, fechaInicio: Date, fechaFin: Date, obtenerMaximo?: boolean): string {
         const contador = this.obtenerAlquilados(reservas, fechaInicio, fechaFin);
 
         let matriculaObtenida = "";

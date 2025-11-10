@@ -2,11 +2,11 @@ import { EstadoVehiculo } from "../AlquilerDeAutos/enums/EstadoVehiculo";
 import { Vehiculo } from "../AlquilerDeAutos/models/Vehiculo";
 import EstadisticasDeOcupacion from "../AlquilerDeAutos/services/EstadisticasDeOcupacion";
 
-/**
- * EL vehiculo MOCK debo crearlo en mis test o ya esta creado?
- */
+    const crearVehiculoMock = (estado: EstadoVehiculo) => ({
+    getEstado: () => estado,
+    } as Vehiculo);
 
-describe('EstadisticasDeOcupacion', () => {
+    describe('EstadisticasDeOcupacion', () => {
 
     let estadisticas: EstadisticasDeOcupacion;
 
@@ -16,10 +16,10 @@ describe('EstadisticasDeOcupacion', () => {
 
     test('Calcula correctamente el 50% de ocupación', () => {
         const vehiculos: Array<Vehiculo> = [
-            crearVehiculoMock(EstadoVehiculo.EnAlquiler),  // Ocupado
-            crearVehiculoMock(EstadoVehiculo.Disponible),  // Libre
-            crearVehiculoMock(EstadoVehiculo.EnAlquiler),  // Ocupado
-            crearVehiculoMock(EstadoVehiculo.EnMantenimiento), // Mantenimiento (no cuenta)
+            crearVehiculoMock(EstadoVehiculo.EnAlquiler),
+            crearVehiculoMock(EstadoVehiculo.Disponible),
+            crearVehiculoMock(EstadoVehiculo.EnAlquiler),  
+            crearVehiculoMock(EstadoVehiculo.EnMantenimiento), 
         ];
         
         const porcentaje = estadisticas.porcentajeDeOcupacion(vehiculos);

@@ -24,7 +24,7 @@ export default class MantenimientoDeVehiculo{
         return this.fechaDeMantenimiento;
     }
 
-    public getMatricula(): Vehiculo{
+    public getVehiculo(): Vehiculo{
         return this.vehiculo;
     }
 

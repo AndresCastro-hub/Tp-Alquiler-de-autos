@@ -1,10 +1,15 @@
 import MantenimientoDeVehiculo from "../AlquilerDeAutos/services/MantenimientoDeVehiculo";
 
 describe('MantenimientoDeVehiculo', () => {
-  test('set/get de matrícula', () => {
+  test('set/get de matrícula mediante mock de Vehiculo', () => {
+    const mockVehiculo = {
+      getMatricula: jest.fn().mockReturnValue('ABC123'),
+    };
+
     const m = new MantenimientoDeVehiculo();
-    m.setMatricula('ABC123');
-    expect(m.getMatricula()).toBe('ABC123');
+    m.setVehiculo(mockVehiculo as any);
+
+    expect(m.getVehiculo().getMatricula()).toBe('ABC123');
   });
 
   test('set/get de fecha de mantenimiento', () => {

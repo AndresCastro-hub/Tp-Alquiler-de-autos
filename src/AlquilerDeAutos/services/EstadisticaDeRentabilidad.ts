@@ -21,7 +21,7 @@ export default class EstadisticaDeRentabilidad {
         const costoPorVehiculo = new Map<string, number>();
 
         mantenimientos.forEach((mantenimiento) => {
-            const matricula = mantenimiento.getMatricula();
+            const matricula = mantenimiento.getVehiculo().getMatricula();
             const costo = mantenimiento.getCosto();
             const costoActual = costoPorVehiculo.get(matricula) || 0;
             costoPorVehiculo.set(matricula, costoActual + costo);

@@ -1,30 +1,31 @@
 import { COSTO_MANTENIMIENTO } from "../constants/constants";
+import { Vehiculo } from "../models/Vehiculo";
 
 export default class MantenimientoDeVehiculo{
     private fechaDeMantenimiento: Date;
     private costo: number;
-    private matricula: string;
+    private vehiculo: Vehiculo;
 
     constructor(){
         this.fechaDeMantenimiento = new Date();
         this.costo = COSTO_MANTENIMIENTO;
-        this.matricula = "";
+        this.vehiculo = undefined as unknown as Vehiculo;
     }
 
     public setFechaMantenimiento(value: Date): void{
         this.fechaDeMantenimiento = value;
     }
 
-    public setMatricula(value:string): void{
-        this.matricula = value;
+    public setVehiculo(value:Vehiculo): void{
+        this.vehiculo = value;
     }
 
     public getFechaMantenimiento(): Date{
         return this.fechaDeMantenimiento;
     }
 
-    public getMatricula(): string{
-        return this.matricula;
+    public getVehiculo(): Vehiculo{
+        return this.vehiculo;
     }
 
     public getCosto(): number{

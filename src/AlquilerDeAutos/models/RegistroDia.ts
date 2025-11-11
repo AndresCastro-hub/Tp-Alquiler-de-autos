@@ -1,6 +1,19 @@
+/**
+ * Representa el registro diario de uso de un vehiculo
+ * 
+ * Guarda la fecha y los kilometros recorridos en un dia
+ */
+
 export default class RegistroDia {
     private dia: Date;
     private kmRecorrido: number;
+
+    /**
+     * Crea un nuevo registro diario
+     * 
+     * @param dia - Fecha del dia del registro
+     * @param kmRecorrido - Cantidad de kilometros recorridos durante el dia
+     */
 
     constructor(dia: Date, kmRecorrido: number) {
         this.dia = dia;

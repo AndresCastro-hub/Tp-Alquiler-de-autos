@@ -1,7 +1,22 @@
+/**
+ * Representa a un cliente dentro del sistema.
+ * 
+ * Contiene sus datos personales: nombre, apellido y su email.
+ * 
+ */
+
 export default class Cliente {
     private nombre: string;
     private apellido: string;
     private email: string;
+
+    /**
+     * Crea una nueva instancia de cliente.
+     * 
+     * @param nombre - Nombre del cliente.
+     * @param apellido - Apellido del cliente.
+     * @param email - Email del cliente.
+     */
 
     constructor();
     constructor(nombre: string, apellido: string, email: string);

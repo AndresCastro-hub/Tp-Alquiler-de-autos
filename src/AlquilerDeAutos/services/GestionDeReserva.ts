@@ -32,12 +32,10 @@ export default class GestionDeReservas {
 
     public cerrarReserva(reserva: Reserva): number {
         const vehiculo = reserva.getVehiculo();
-        const cantidadDeKilometrosRecorridos = reserva.getGestionDelKilometraje().getTotalKmRecorridos()
-        this.actualizarKilometrajeRecorrido(vehiculo, cantidadDeKilometrosRecorridos)
+        const cantidadDeKilometrosRecorridos = reserva.getGestionDelKilometraje().getTotalKmRecorridos();
+        vehiculo.actualizarKMRecorridos(cantidadDeKilometrosRecorridos);
+        this.gestorMantenimiento.procesarMantenimiento(vehiculo);
 
-        this.procesarMantenimiento(vehiculo);
-
-        this.eliminarReserva(reserva)
         return reserva.calcularCostoTotal();
     }
 
@@ -60,27 +58,8 @@ export default class GestionDeReservas {
         return !existeSuperposicion && elVehiculoEstaDisponible;
     }
 
-    private eliminarReserva(reserva: Reserva): void {
-        const filtroReservaActual = this.reservas.filter(re => re !== reserva)
-        this.reservas = filtroReservaActual
-    }
-
+ 
     private marcarVehiculoEnAlquiler(vehiculo: Vehiculo): void {
         vehiculo.setEstado(EstadoVehiculo.EnAlquiler);
     }
-
-    private actualizarKilometrajeRecorrido(vehiculo: Vehiculo, kmRecorridos: number): void {
-        const kmFinal = vehiculo.getContadorKm() + kmRecorridos;
-        vehiculo.setContadorKm(kmFinal);
-    }
-
-    private procesarMantenimiento(vehiculo: Vehiculo): void {
-        vehiculo.incrementarAlquiler();
-
-        if (vehiculo.necesitaMantenimiento()) {
-            vehiculo.setEstado(EstadoVehiculo.EnMantenimiento);
-            vehiculo.registrarMantenimiento(this.gestorMantenimiento);
-        }
-    }
-
 }

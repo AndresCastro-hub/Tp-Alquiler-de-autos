@@ -1,6 +1,9 @@
 import { EstadoVehiculo } from "../enums/EstadoVehiculo";
+import GestorDeMantenimiento from "../services/GestionDeMantenimiento";
+import MantenimientoDeVehiculo from "../services/MantenimientoDeVehiculo";
 import RegistroDia from "./RegistroDia";
 import TemporadaBase from "./TemporadaBase";
+import { VehiculoMantenimiento } from "./VehiculoMantenimiento";
 
 /**
  * **Clase abstracta que representa un vehículo en el sistema.**
@@ -20,6 +23,7 @@ export abstract class Vehiculo {
     private contadorKm: number;
     private tarifaBase: number;
     private tarifaExtra: number;
+    private mantenimiento: VehiculoMantenimiento;
 
     /**
      * Crea una nueva instancia de vehiculo
@@ -35,6 +39,7 @@ export abstract class Vehiculo {
         this.contadorKm = contadorKm;
         this.tarifaBase = 0;
         this.tarifaExtra = 0;
+        this.mantenimiento = new VehiculoMantenimiento(new Date(), contadorKm);
     }
 
     public getMatricula(): string {
@@ -93,5 +98,22 @@ export abstract class Vehiculo {
      */
     public actualizarContador(km: number): void {
         this.contadorKm += km;
+    }
+
+    //ITEM 2
+    public necesitaMantenimiento(): boolean {
+        return this.mantenimiento.necesitaMantenimiento(this.contadorKm);
+    }
+
+    public incrementarAlquiler(): void {
+        this.mantenimiento.incrementarAlquiler();
+    }
+
+    public resetearValoresMantenimiento(): void {
+        this.mantenimiento.resetearValores();
+    }
+
+    public actualizarKMRecorridos(kmRecorridos: number): void{
+        this.setContadorKm(this.getContadorKm() + kmRecorridos);
     }
 }

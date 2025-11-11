@@ -1,7 +1,7 @@
 import TemporadaBase from "../AlquilerDeAutos/models/TemporadaBase";
 
 class testTemporadaBase extends TemporadaBase {
-    getPorcentajeDeTemporada(tarifaBase: number): number {
+    getPorcentajeDeTemporada(): number {
         throw new Error("Method not implemented.");
     }
 }

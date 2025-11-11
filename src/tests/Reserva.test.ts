@@ -26,7 +26,7 @@ const gestorKilometrajeMock: GestorKilometraje = {
 } as unknown as GestorKilometraje
 
 const gestorTemporadaMock: GestorDeTemporada = {
-    getTemporada: jest.fn().mockImplementation((fechaInicioReserva: Date)=>{
+    getTemporada: jest.fn().mockImplementation(()=>{
         return {tarifaBaseTemporada: 50};
     })
 } as unknown as GestorDeTemporada

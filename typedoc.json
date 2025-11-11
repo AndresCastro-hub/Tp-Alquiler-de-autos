@@ -1,0 +1,16 @@
+{
+  "entryPoints": [
+    "src/AlquilerDeAutos/models",
+    "src/AlquilerDeAutos/services"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "docs",
+  "includeVersion": true,
+  "exclude": [
+    "**/*.test.ts",
+    "**/tests/**"
+  ],
+  "hideGenerator": true,
+  "tsconfig": "./tsconfig.json",
+  "plugin": ["typedoc-plugin-rename-defaults"]
+}

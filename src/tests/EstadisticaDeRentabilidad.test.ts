@@ -4,89 +4,130 @@ import MantenimientoDeVehiculo from "../AlquilerDeAutos/services/MantenimientoDe
 import { Vehiculo } from "../AlquilerDeAutos/models/Vehiculo";
 import { COSTO_MANTENIMIENTO } from "../AlquilerDeAutos/constants/constants";
 
-describe("Tests para la clase EstadisticaDeRentabilidad", () => {
+describe("EstadisticaDeRentabilidad", () => {
   let estadistica: EstadisticaDeRentabilidad;
-  let vehiculoA: Vehiculo;
-  let vehiculoB: Vehiculo;
+  let vehiculoMockA: jest.Mocked<Vehiculo>;
+  let vehiculoMockB: jest.Mocked<Vehiculo>;
 
   beforeEach(() => {
     estadistica = new EstadisticaDeRentabilidad();
-    vehiculoA = { getMatricula: () => "AAA111" } as unknown as Vehiculo;
-    vehiculoB = { getMatricula: () => "BBB222" } as unknown as Vehiculo;
+    
+    vehiculoMockA = {
+      getMatricula: jest.fn().mockReturnValue("AAA111"),
+    } as unknown as jest.Mocked<Vehiculo>;
+
+    vehiculoMockB = {
+      getMatricula: jest.fn().mockReturnValue("BBB222"),
+    } as unknown as jest.Mocked<Vehiculo>;
   });
 
-  it("Deberia calcular los ingresos por vehículo correctamente", () => {
-    const reservas = [
-      { getVehiculo: () => vehiculoA, calcularCostoTotal: () => 1000 },
-      { getVehiculo: () => vehiculoA, calcularCostoTotal: () => 500 },
-      { getVehiculo: () => vehiculoB, calcularCostoTotal: () => 200 },
+  it("Calcular los ingresos por vehículo correctamente", () => {
+    const reservasMock = [
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockA),
+        calcularCostoTotal: jest.fn().mockReturnValue(1000)
+      },
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockA),
+        calcularCostoTotal: jest.fn().mockReturnValue(500)
+      },
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockB),
+        calcularCostoTotal: jest.fn().mockReturnValue(200)
+      }
     ] as unknown as Reserva[];
 
-    const resultado = (estadistica as any).obtenerIngresosPorVehiculo(reservas);
+    const resultado = (estadistica as any).obtenerIngresosPorVehiculo(reservasMock);
 
     expect(resultado.get("AAA111")).toBe(1500);
     expect(resultado.get("BBB222")).toBe(200);
   });
 
-  it("Deberia calcular el costo de mantenimiento correctamente (constante 200)", () => {
-    const mantenimientos = [
-      Object.assign(new MantenimientoDeVehiculo(), { matricula: "AAA111" }),
-      Object.assign(new MantenimientoDeVehiculo(), { matricula: "AAA111" }),
-      Object.assign(new MantenimientoDeVehiculo(), { matricula: "BBB222" }),
-    ];
+  it("Calcular el costo de mantenimiento correctamente", () => {
+    const mantenimientosMock = [
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockA),
+        getCosto: jest.fn().mockReturnValue(COSTO_MANTENIMIENTO)
+      },
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockA),
+        getCosto: jest.fn().mockReturnValue(COSTO_MANTENIMIENTO)
+      },
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockB),
+        getCosto: jest.fn().mockReturnValue(COSTO_MANTENIMIENTO)
+      }
+    ] as unknown as MantenimientoDeVehiculo[];
 
-    const resultado = (estadistica as any).obtenerCostoMantenimiento(mantenimientos);
+    const resultado = (estadistica as any).obtenerCostoMantenimiento(mantenimientosMock);
 
-    expect(resultado.get("AAA111")).toBe(2 * COSTO_MANTENIMIENTO);
-    expect(resultado.get("BBB222")).toBe(1 * COSTO_MANTENIMIENTO);
+    expect(resultado.get("AAA111")).toBe(COSTO_MANTENIMIENTO * 2);
+    expect(resultado.get("BBB222")).toBe(COSTO_MANTENIMIENTO);
   });
 
-  it("Deberia devolver el vehículo con mayor rentabilidad", () => {
-    const reservas = [
-      { getVehiculo: () => vehiculoA, calcularCostoTotal: () => 1000 },
-      { getVehiculo: () => vehiculoB, calcularCostoTotal: () => 200 },
+  it("Identificar el vehículo con mayor rentabilidad", () => {
+    const reservasMock = [
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockA),
+        calcularCostoTotal: jest.fn().mockReturnValue(1000)
+      },
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockB),
+        calcularCostoTotal: jest.fn().mockReturnValue(200)
+      }
     ] as unknown as Reserva[];
 
-    const mantenimientos = [
-      Object.assign(new MantenimientoDeVehiculo(), { matricula: "AAA111" }),
-      Object.assign(new MantenimientoDeVehiculo(), { matricula: "BBB222" }),
-    ];
+    const mantenimientosMock = [
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockA),
+        getCosto: jest.fn().mockReturnValue(COSTO_MANTENIMIENTO)
+      },
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockB),
+        getCosto: jest.fn().mockReturnValue(COSTO_MANTENIMIENTO)
+      }
+    ] as unknown as MantenimientoDeVehiculo[];
 
-    const resultado = estadistica.mayorRentabilidad(reservas, mantenimientos);
+    const resultado = estadistica.mayorRentabilidad(reservasMock, mantenimientosMock);
 
-    expect(resultado?.getMatricula()).toBe("AAA111");
+    expect(resultado).toBe(vehiculoMockA);
   });
 
-  it("Deberia devolver el vehículo con menor rentabilidad", () => {
-    const reservas = [
-      { getVehiculo: () => vehiculoA, calcularCostoTotal: () => 1000 },
-      { getVehiculo: () => vehiculoB, calcularCostoTotal: () => 200 },
+  it("Identificar el vehículo con menor rentabilidad", () => {
+    const reservasMock = [
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockA),
+        calcularCostoTotal: jest.fn().mockReturnValue(1000)
+      },
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockB),
+        calcularCostoTotal: jest.fn().mockReturnValue(200)
+      }
     ] as unknown as Reserva[];
 
-    const mantenimientos = [
-      Object.assign(new MantenimientoDeVehiculo(), { matricula: "AAA111" }),
-      Object.assign(new MantenimientoDeVehiculo(), { matricula: "BBB222" }),
-    ];
+    const mantenimientosMock = [
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockA),
+        getCosto: jest.fn().mockReturnValue(COSTO_MANTENIMIENTO)
+      },
+      {
+        getVehiculo: jest.fn().mockReturnValue(vehiculoMockB),
+        getCosto: jest.fn().mockReturnValue(COSTO_MANTENIMIENTO)
+      }
+    ] as unknown as MantenimientoDeVehiculo[];
 
-    const resultado = estadistica.menorRentabilidad(reservas, mantenimientos);
+    const resultado = estadistica.menorRentabilidad(reservasMock, mantenimientosMock);
 
-    expect(resultado?.getMatricula()).toBe("BBB222");
+    expect(resultado).toBe(vehiculoMockB);
   });
 
-  it("Deberia tener un método llamado mayorRentabilidad", () => {
-    expect(typeof estadistica.mayorRentabilidad).toBe("function");
+  it("Retornar null cuando no hay reservas para calcular mayor rentabilidad", () => {
+    const resultado = estadistica.mayorRentabilidad([], []);
+    expect(resultado).toBeNull();
   });
 
-  it("Deberia tener un método llamado menorRentabilidad", () => {
-    expect(typeof estadistica.menorRentabilidad).toBe("function");
+  it("Retornar null cuando no hay reservas para calcular menor rentabilidad", () => {
+    const resultado = estadistica.menorRentabilidad([], []);
+    expect(resultado).toBeNull();
   });
-
-  it("Deberia tener un método privado llamado obtenerIngresosPorVehiculo", () => {
-    expect(typeof (estadistica as any).obtenerIngresosPorVehiculo).toBe("function");
-  });
-
-  it("Deberia tener un método privado llamado obtenerCostoMantenimiento", () => {
-    expect(typeof (estadistica as any).obtenerCostoMantenimiento).toBe("function");
-  });
-  
 });

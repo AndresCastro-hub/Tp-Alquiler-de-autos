@@ -131,7 +131,7 @@ describe("GestionDeReservas", () => {
     expect(vehiculoMock1.getEstado()).toBe(EstadoVehiculo.EnAlquiler);
   });
 
-  it("cerrarReserva: actualiza km, procesa mantenimiento, elimina reserva y retorna costo", () => {
+  it("cerrarReserva: actualiza km, procesa mantenimiento y retorna costo", () => {
     const reservaMock1: Reserva = {
       getVehiculo: jest.fn().mockReturnValue(vehiculoMock1),
       getFechaInicioReserva: jest.fn().mockReturnValue(new Date("2025-05-20")),

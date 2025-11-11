@@ -11,5 +11,6 @@
     "**/tests/**"
   ],
   "hideGenerator": true,
-  "tsconfig": "./tsconfig.json"
+  "tsconfig": "./tsconfig.json",
+  "plugin": ["typedoc-plugin-rename-defaults"]
 }

@@ -27,7 +27,6 @@ describe("GestionDeReservas", () => {
       actualizarKMRecorridos: jest.fn(),
     } as unknown as Vehiculo;
 
-    jest.spyOn(gestion as any, "eliminarReserva");
   });
 
   it("debería iniciar sin reservas", () => {
@@ -124,19 +123,7 @@ describe("GestionDeReservas", () => {
     }
   });
 
-  it("eliminarReserva: elimina correctamente la reserva", () => {
-    const reservaMock1: Reserva = {
-      getVehiculo: jest.fn().mockReturnValue(vehiculoMock1),
-      getFechaInicioReserva: jest.fn().mockReturnValue(new Date("2025-07-01")),
-      getFechaFinReserva: jest.fn().mockReturnValue(new Date("2025-07-10")),
-    } as unknown as Reserva;
-
-    (gestion as any).reservas.push(reservaMock1);
-    expect((gestion as any).reservas).toHaveLength(1);
-
-    (gestion as any).eliminarReserva(reservaMock1);
-    expect((gestion as any).reservas).toHaveLength(0);
-  });
+ 
 
   it("marcarVehiculoEnAlquiler: debe cambiar el estado del vehículo a EnAlquiler", () => {
     expect(vehiculoMock1.getEstado()).toBe(EstadoVehiculo.Disponible);
@@ -162,8 +149,6 @@ describe("GestionDeReservas", () => {
     expect(vehiculoMock1.actualizarKMRecorridos).toHaveBeenCalledWith(150);
 
     expect(gestorDeMantenimientoMock.procesarMantenimiento).toHaveBeenCalledWith(vehiculoMock1);
-
-    expect((gestion as any).eliminarReserva).toHaveBeenCalledWith(reservaMock1);
 
     expect(resultado).toBe(250);
 

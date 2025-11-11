@@ -36,7 +36,6 @@ export default class GestionDeReservas {
         vehiculo.actualizarKMRecorridos(cantidadDeKilometrosRecorridos);
         this.gestorMantenimiento.procesarMantenimiento(vehiculo);
 
-        this.eliminarReserva(reserva)
         return reserva.calcularCostoTotal();
     }
 
@@ -59,11 +58,7 @@ export default class GestionDeReservas {
         return !existeSuperposicion && elVehiculoEstaDisponible;
     }
 
-    private eliminarReserva(reserva: Reserva): void {
-        const filtroReservaActual = this.reservas.filter(re => re !== reserva)
-        this.reservas = filtroReservaActual
-    }
-
+ 
     private marcarVehiculoEnAlquiler(vehiculo: Vehiculo): void {
         vehiculo.setEstado(EstadoVehiculo.EnAlquiler);
     }

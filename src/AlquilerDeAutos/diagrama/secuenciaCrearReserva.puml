@@ -1,0 +1,93 @@
+@startuml
+title Creación de una Reserva
+
+participant Cliente
+participant GestionReservas as "GestionReservas"
+participant Reserva as "Reserva"
+participant Vehiculo as "Vehiculo"
+participant Date as "Date"
+participant ErrorVehiculoNoDisponible as "ErrorVehiculoNoDisponible"
+
+' INICIO: Llamada inicial desde el "Cliente"
+Cliente -> GestionReservas : agregarReserva(reserva)
+activate GestionReservas
+
+' 1. Obtener datos de la Reserva
+GestionReservas -> Reserva : getVehiculo()
+activate Reserva
+Reserva --> GestionReservas : vehiculo
+deactivate Reserva
+
+GestionReservas -> Reserva : getFechaInicioReserva()
+activate Reserva
+Reserva --> GestionReservas : fechaInicio
+deactivate Reserva
+
+GestionReservas -> Reserva : getFechaFinalReserva()
+activate Reserva
+Reserva --> GestionReservas : fechaFinal
+deactivate Reserva
+
+'Chequeo de Disponibilidad'
+
+GestionReservas -> GestionReservas : chequearDisponibilidad(vehiculo, fechaInicio, fechaFinal)
+activate GestionReservas
+    GestionReservas -> Vehiculo : getMatricula()
+    activate Vehiculo
+    Vehiculo --> GestionReservas : matricula
+    deactivate Vehiculo
+
+    note right : Filtra las reservas existentes.
+
+    GestionReservas -> Date : getTime()
+    activate Date
+    Date --> GestionReservas : nuevoInicio
+    Date --> GestionReservas : nuevoFin
+    deactivate Date
+
+    loop por cada reserva r en reservasVehiculo
+        GestionReservas -> Reserva : getFechaInicioReserva().getTime()
+        activate Reserva
+        Reserva --> GestionReservas : inicio
+        deactivate Reserva
+        GestionReservas -> Reserva : getFechaFinReserva().getTime()
+        activate Reserva
+        Reserva --> GestionReservas : fin
+        deactivate Reserva
+        GestionReservas -> GestionReservas : Comprueba superposición
+    end
+
+    GestionReservas -> Vehiculo : getEstado()
+    activate Vehiculo
+    Vehiculo --> GestionReservas : estadoActual
+    deactivate Vehiculo
+
+    GestionReservas --> GestionReservas : retorna !existeSuperposicion && elVehiculoEstaDisponible)
+deactivate GestionReservas
+
+ 'Evaluación y Ejecución'
+
+alt Vehículo NO Disponible
+    GestionReservas -> ErrorVehiculoNoDisponible : Lanza new ErrorVehiculoNoDisponible()
+    activate ErrorVehiculoNoDisponible
+    ErrorVehiculoNoDisponible --> Cliente : Excepción
+    deactivate ErrorVehiculoNoDisponible
+    deactivate GestionReservas
+else Vehículo Disponible
+    ' Persistir la Reserva
+    GestionReservas -> GestionReservas : this.reservas.push(reserva)
+    note right : Agrega la reserva al array
+
+    ' Marcar Vehículo como En Alquiler
+    GestionReservas -> GestionReservas : marcarVehiculoEnAlquiler(vehiculo)
+    activate GestionReservas
+        GestionReservas -> Vehiculo : setEstado(EstadoVehiculo.EnAlquiler)
+        activate Vehiculo
+        deactivate Vehiculo
+    deactivate GestionReservas
+
+    GestionReservas --> Cliente : Retorno exitoso (void)
+    deactivate GestionReservas
+end
+
+@enduml

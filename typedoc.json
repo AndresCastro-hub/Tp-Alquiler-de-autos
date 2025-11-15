@@ -4,7 +4,7 @@
     "src/AlquilerDeAutos/services"
   ],
   "entryPointStrategy": "expand",
-  "out": "docs",
+  "out": "documentacion",
   "includeVersion": true,
   "exclude": [
     "**/*.test.ts",

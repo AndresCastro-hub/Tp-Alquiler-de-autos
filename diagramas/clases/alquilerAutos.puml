@@ -150,7 +150,7 @@ class GestorKilometraje {
 
 class GestionDeReservas {
    - reservas: Array<Reserva>
-   - gestorMantenimiento: GestorDeMantenimiento
+   - gestorMantenimiento: GestionDeMantenimiento
 
    + agregarReserva(reserva: Reserva): void
    + cerrarReserva(reserva: Reserva): number
@@ -179,14 +179,14 @@ class GestorDeAlquilerVehicular {
    - gestionDeVehiculos: GestionDeVehiculos
    - gestionDeClientes: GestionDeClientes
    - gestionDeReservas: GestionDeReservas
-   - gestionMantenimiento: GestorDeMantenimiento
+   - gestionMantenimiento: GestionDeMantenimiento
    - gestionEstadisticas: GestorEstadisticas
 }
 
 GestorDeAlquilerVehicular o-- GestionDeVehiculos
 GestorDeAlquilerVehicular o-- GestionDeReservas
 GestorDeAlquilerVehicular o-- GestionDeClientes
-GestorDeAlquilerVehicular o-- GestorDeMantenimiento
+GestorDeAlquilerVehicular o-- GestionDeMantenimiento
 GestorDeAlquilerVehicular o-- GestorEstadisticas
 
 ' Mantenimiento
@@ -198,15 +198,16 @@ class MantenimientoDeVehiculo {
    + getters_y_setters()
 }
 
-class GestorDeMantenimiento {
+class GestionDeMantenimiento {
    - vehiculosEnMantenimiento: Array<MantenimientoDeVehiculo>
 
    + registrarMantenimiento(vehiculo: MantenimientoDeVehiculo) : void
    + procesarMantenimiento(vehiculo: Vehiculo): void
+   + finalizarMantenimiento(vehiculo: Vehiculo): void
 }
 
-GestorDeMantenimiento o-- MantenimientoDeVehiculo
-GestorDeMantenimiento *-- GestionDeReservas
+GestionDeMantenimiento o-- MantenimientoDeVehiculo
+GestionDeMantenimiento *-- GestionDeReservas
 
 Vehiculo ..> EstadoVehiculo : usa
 ' Reportes y Estadisticas

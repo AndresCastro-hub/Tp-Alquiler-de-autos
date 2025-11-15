@@ -54,4 +54,8 @@ export default class GestorDeMantenimiento{
             vehiculo.resetearValoresMantenimiento();
         }
     }
+
+    public finalizarMantenimiento(vehiculo: Vehiculo): void{
+        vehiculo.setEstado(EstadoVehiculo.Disponible);
+    }
 }

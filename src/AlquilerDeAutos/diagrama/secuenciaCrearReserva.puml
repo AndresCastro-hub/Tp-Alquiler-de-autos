@@ -73,21 +73,20 @@ alt Vehículo NO Disponible
     ErrorVehiculoNoDisponible --> Cliente : Excepción
     deactivate ErrorVehiculoNoDisponible
     deactivate GestionReservas
-else Vehículo Disponible
-    ' Persistir la Reserva
-    GestionReservas -> GestionReservas : this.reservas.push(reserva)
-    note right : Agrega la reserva al array
-
-    ' Marcar Vehículo como En Alquiler
-    GestionReservas -> GestionReservas : marcarVehiculoEnAlquiler(vehiculo)
-    activate GestionReservas
-        GestionReservas -> Vehiculo : setEstado(EstadoVehiculo.EnAlquiler)
-        activate Vehiculo
-        deactivate Vehiculo
-    deactivate GestionReservas
-
-    GestionReservas --> Cliente : Retorno exitoso (void)
-    deactivate GestionReservas
 end
+' Persistir la Reserva
+GestionReservas -> GestionReservas : this.reservas.push(reserva)
+note right : Agrega la reserva al array
+
+' Marcar Vehículo como En Alquiler
+GestionReservas -> GestionReservas : marcarVehiculoEnAlquiler(vehiculo)
+activate GestionReservas
+    GestionReservas -> Vehiculo : setEstado(EstadoVehiculo.EnAlquiler)
+    activate Vehiculo
+    deactivate Vehiculo
+deactivate GestionReservas
+
+GestionReservas --> Cliente : Retorno exitoso (void)
+deactivate GestionReservas
 
 @enduml

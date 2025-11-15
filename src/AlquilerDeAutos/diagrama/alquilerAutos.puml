@@ -55,7 +55,7 @@ abstract class TemporadaBase {
    - mesesValidos: Array<number>
 
    + esValida(fecha: Date): boolean
-   {abstract} + getPorcentajeDeTemporada(tarifaBase: number) : number
+   + abstract getPorcentajeDeTemporada(tarifaBase: number) : number
 }
 
 class TemporadaAlta {

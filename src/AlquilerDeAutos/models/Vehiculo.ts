@@ -79,7 +79,7 @@ export abstract class Vehiculo {
      * @param temporada 
      * @returns Tarifa base ajustada segun la temporada que corresponde
      */
-    public calcularTarifaBaseSegunTemporada(temporada: TemporadaBase): number {
+    protected calcularTarifaBaseSegunTemporada(temporada: TemporadaBase): number {
         return temporada.getPorcentajeDeTemporada(this.getTarifaBase());
     }
 
@@ -92,13 +92,12 @@ export abstract class Vehiculo {
      */
     abstract calcularTarifa(totalDelRecorrido: RegistroDia[], temporada: TemporadaBase): number;
 
-    /**
-     * Actualiza el contador de kilometros del vehiculo 
-     * @param km - Cantidad de kilometros a agregar
-     */
+    
+    /*
     public actualizarContador(km: number): void {
         this.contadorKm += km;
     }
+    */
 
     //ITEM 2
     public necesitaMantenimiento(): boolean {
@@ -113,6 +112,10 @@ export abstract class Vehiculo {
         this.mantenimiento.resetearValores();
     }
 
+    /**
+     * Actualiza el contador de kilometros del vehiculo 
+     * @param kmRecorridos - Cantidad de kilometros a agregar
+     */
     public actualizarKMRecorridos(kmRecorridos: number): void{
         this.setContadorKm(this.getContadorKm() + kmRecorridos);
     }

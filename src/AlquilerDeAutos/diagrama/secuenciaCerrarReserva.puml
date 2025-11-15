@@ -21,16 +21,22 @@ activate gR
 
     gR -> res : getGestionDelKilometraje()
     activate res
-        res -> gK : getTotalKmRecorridos()
-        activate gK
-            gK --> res : cantidadDeKilometrosRecorridos
-        deactivate gK
-        res --> gR : cantidadDeKilometrosRecorridos
+        res --> gR : GestorKilometraje
     deactivate res
 
+    gR -> gK : getTotalKmRecorridos()
+    activate gK
+        gK --> gR : cantidadDeKilometrosRecorridos
+    deactivate gK
+
     ' Actualizar KM y Mantenimiento
-    gR -> veh : actualizarKMRecorridos(cantidadKm)
+    gR -> veh : actualizarKMRecorridos(cantidadDeKilometrosRecorridos)
     activate veh
+        veh -> veh : getContadorKm()
+        activate veh
+            veh --> veh : contadorKm
+        deactivate veh
+        veh -> veh : setContadorKm(contadorKm + cantidadDeKilometrosRecorridos)
     deactivate veh
 
     gR -> gM : procesarMantenimiento(vehiculo)
@@ -53,12 +59,16 @@ activate gR
             gM -> veh : setEstado(EstadoVehiculo.EnMantenimiento)
             activate veh
             deactivate veh
-
+            
             gM -> gM : registrarMantenimiento(vehiculo) ' <<Crea y configura el MantenimientoVehiculo>>
             activate gM
                 create mant
                 gM -> mant **: new()
-                gM -> gM : <<añadir a vehiculosEnMantenimiento>> (mantenimientoNuevo)
+                activate mant
+                    mant -> mant : setFechaMantenimiento(new Date())
+                    mant -> mant : setVehiculo(Vehiculo)
+                deactivate mant
+                gM -> gM : <<añade a array de vehiculosEnMantenimiento>>
             deactivate gM
 
             gM -> veh : resetearValoresMantenimiento()
@@ -70,11 +80,6 @@ activate gR
         end
 
     deactivate gM
-
-    ' Eliminar Reserva
-    gR -> gR : eliminarReserva(reserva)
-    activate gR
-    deactivate gR
 
     ' Calcular Costo Total
     gR -> res : calcularCostoTotal()

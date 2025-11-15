@@ -7,18 +7,22 @@ DriveHub es una aplicación que gestiona una flota de vehículos y las reservas 
 Permite crear vehículos, administrar alquileres, registrar kilometraje, calcular tarifas con recargos, aplicar variaciones por temporada, controlar mantenimiento automático y generar estadísticas de uso y rentabilidad.
 
 ## 📂 Estructura del Proyecto
-  /diagramas
-    /clases -> Diagrama de clases de toda la aplicación
-    /secuencia -> Diagrama de secuencia de 2 acciones dentro de la aplicación.
-  /tests -> Pruebas unitarias
-  /documentacion -> Documentación generada por TypeDoc.
-  /src
-    /models -> Clases principales (Vehículos, Reserva, Cliente, etc.)
-    /services -> Lógica de negocio (tarifas, mantenimiento, estadísticas)
-    /constants -> Valores que estan harcodeados y decidimos centralizarlos en un archivo
-    /errors -> Clases de excepciones para sus errores correspondientes
-    /enums
+  ```txt
+diagramas/
+  clases/       -> Diagrama de clases general de la aplicación
+  secuencia/    -> Diagrama de secuencia de 2 acciones internas
 
+tests/          -> Pruebas unitarias
+
+documentacion/  -> Documentación generada con TypeDoc
+
+src/
+  models/       -> Clases principales (Vehículos, Reserva, Cliente, etc.)
+  services/     -> Lógica de negocio (tarifas, mantenimiento, estadísticas)
+  constants/    -> Valores hardcodeados centralizados
+  errors/       -> Clases de excepciones
+  enums/        -> Enumeraciones de la aplicación
+```
 # 📦 Instalar dependencias
 Instalá las dependencias necesarias para correr el proyecto:
 ```bash

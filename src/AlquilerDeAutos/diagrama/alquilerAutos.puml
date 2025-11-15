@@ -11,78 +11,101 @@ enum EstadoVehiculo {
 }
 
 ' Vehiculos
-abstract class Vehiculo{
-   -matricula: string
-   -estado: EstadoVehiculo
-   -contadorKm: number
-   -tarifaBase: number
-   -tarifaExtra: number
+abstract class Vehiculo {
+   - matricula: string
+   - estado: EstadoVehiculo
+   - contadorKm: number
+   - tarifaBase: number
+   - tarifaExtra: number
+   - mantenimiento: VehiculoMantenimiento
 
+   + setters_y_getters()
+   + calcularTarifaBaseSegunTemporada(temporada: TemporadaBase): number
    + abstract calcularTarifa(totalDelRecorrido: RegistroDia[]): number
    + actualizarContador(): void
-   + setters_y_getters()
+   + necesitaMantenimiento(): boolean
+   + incrementarAlquiler(): void
+   + resetearValoresMantenimiento(): void
+   + actualizarKMRecorridos(kmRecorridos: number): void
 }
 
-class Compacto{
-   -tarifaBase: number
-   -tarifaExtra: number
-   + calcularTarifa(totalDelRecorrido: RegistroDia): number
+class Compacto {
+   - tarifaBase: number
+   - tarifaExtra: number
+
+   + calcularTarifa(totalDelRecorrido: RegistroDia, temporada: TemporadaBase): number
 }
 
-class Suv{
-   -tarifaBase: number
-   -tarifaExtra: number
-   -tarifaFijaSeguro: number
-   + calcularTarifa(totalDelRecorrido: RegistroDia): number
+class Suv {
+   - tarifaBase: number
+   - tarifaExtra: number
+   - tarifaFijaSeguro: number
+
+   + calcularTarifa(totalDelRecorrido: RegistroDia, temporada: TemporadaBase): number
 }
 
-class Sedan{
-   -tarifaBase: number
-   -tarifaExtra: number
-   + calcularTarifa(totalDelRecorrido: RegistroDia): number
+class Sedan {
+   - tarifaBase: number
+   - tarifaExtra: number
+
+   + calcularTarifa(totalDelRecorrido: RegistroDia, temporada: TemporadaBase): number
 }
 
-abstract class TemporadaBase{
-   - mesesValidos: number[]
+abstract class TemporadaBase {
+   - mesesValidos: Array<number>
+
    + esValida(fecha: Date): boolean
+   + abstract getPorcentajeDeTemporada(tarifaBase: number) : number
 }
 
-class TemporadaAlta{
+class TemporadaAlta {
    + getPorcentajeDeTemporada(tarifaBase: number) : number
 }
 
-class TemporadaMedia{
+class TemporadaMedia {
    + getPorcentajeDeTemporada(tarifaBase: number) : number
 }
 
-class TemporadaBaja{
+class TemporadaBaja {
    + getPorcentajeDeTemporada(tarifaBase: number) : number
 }
 
+class VehiculoMantenimiento {
+   - fechaUltimoMantenimiento: Date
+   - kmDelUltimoMantenimiento: number
+   - alquileresDesdeUltimoMantenimiento: number
 
+   + setters_y_getters()
+   + necesitaMantenimiento(contadorActual: number): boolean
+   - mesesDesdeUltimoMantenimiento(fecha: Date): number
+   + incrementarAlquiler(): void
+   + resetearValores(): void
+}
 
 Vehiculo <|-- Compacto
 Vehiculo <|-- Sedan
 Vehiculo <|-- Suv
+Vehiculo *-r- VehiculoMantenimiento
 
 GestorDeTemporada *-- TemporadaBase
-GestorDeTemporada o-- Reserva
+GestorDeTemporada *-u- Reserva
 
 TemporadaBase <|-- TemporadaAlta
 TemporadaBase <|-- TemporadaMedia
 TemporadaBase <|-- TemporadaBaja
 
 ' Clientes
-class Cliente{
-   -nombre: string
-   -apellido: string
-   -email: string
+class Cliente {
+   - nombre: string
+   - apellido: string
+   - email: string
    
    + setters_y_getters()
 }
 
-class GestionDeClientes{
-   - clientes: Cliente[]
+class GestionDeClientes {
+   - clientes: Array<Cliente>
+
    + agregarCliente(cliente: Cliente): void
    + eliminarCliente(cliente: Cliente): void
    - clienteExiste(cliente: Cliente): boolean
@@ -91,11 +114,11 @@ class GestionDeClientes{
 GestionDeClientes *-- Cliente
 
 ' Reservas
-class Reserva{
-   -cliente: Cliente
-   -vehiculo: Vehiculo
-   -gestionDelKilometraje: GestorKilometraje
-   -fechaInicioReserva: Date
+class Reserva {
+   - cliente: Cliente
+   - vehiculo: Vehiculo
+   - gestionDelKilometraje: GestorKilometraje
+   - fechaInicioReserva: Date
    - fechaFinReserva: Date
    - gestorDeTemporada: GestorDeTemporada
    
@@ -103,52 +126,56 @@ class Reserva{
    + calcularCostoTotal() : number
 }
 
-class RegistroDia{
+class RegistroDia {
    - dia: Date
    - kmRecorrido: number
+
    + getters_y_setters()
 }
 
-class GestorDeTemporada{
+class GestorDeTemporada {
    - temporadas: TemporadaBase
+
    + agregarTemporada(temporada: TemporadaBase):void
    + getTemporada(fechaInicio: Date) : TemporadaBase
 }
 
+class GestorKilometraje {
+   - informacionDelRecorrido: Array<RegistroDia>
 
-class GestorKilometraje{
-   - informacionDelRecorrido: RegistroDia[]
-   + setKmRecorridoXDia(registro: RegistroDia): void
-   + getInformacionDelRecorrido() : RegistroDia[]
+   + setKmRecorridoXDia(dia: Date, kmRecorrido: number): void
+   + getInformacionDelRecorrido() : Array<RegistroDia>
    + getTotalKmRecorridos(): number
 }
 
-class GestionDeReservas{
-   -reservas: Reserva[]
-   +agregarReserva(reserva: Reserva): void
-   +cerrarReserva(reserva: Reserva): number
-   -chequearDisponibilidad(): void
-   - marcarVehiculoEnAlquiler(vehiculo: Vehiculo) : void
-   - marcarVehiculoNecesitaLimpieza(vehiculo: Vehiculo) : void
-   - actualizarKilometrajeRecorrido(vehiculo: Vehiculo, kmRecorridos: number): void
+class GestionDeReservas {
+   - reservas: Array<Reserva>
+   - gestorMantenimiento: GestorDeMantenimiento
+
+   + agregarReserva(reserva: Reserva): void
+   + cerrarReserva(reserva: Reserva): number
+   - chequearDisponibilidad(vehiculo: Vehiculo, fechaInicio: Date, fechaFinal: Date): boolean
+   - marcarVehiculoEnAlquiler(vehiculo: Vehiculo): void
 }
 
 GestionDeReservas *-- Reserva
-GestorKilometraje o-- Reserva
+GestorKilometraje -u-* Reserva
+GestorKilometraje *-- RegistroDia
 
 Cliente *-- Reserva
 Vehiculo *-- Reserva
 
 ' Vehiculos gestion
-class GestionDeVehiculos{
-   - vehiculos: Vehiculo[]
+class GestionDeVehiculos {
+   - vehiculos: Array<Vehiculo>
+
    + agregarVehiculo(vehiculo: Vehiculo): void
 }
 
 GestionDeVehiculos *-- Vehiculo
 
 ' Gestor principal
-class GestorDeAlquilerVehicular{
+class GestorDeAlquilerVehicular {
    - gestionDeVehiculos: GestionDeVehiculos
    - gestionDeClientes: GestionDeClientes
    - gestionDeReservas: GestionDeReservas
@@ -163,20 +190,23 @@ GestorDeAlquilerVehicular o-- GestorDeMantenimiento
 GestorDeAlquilerVehicular o-- GestorEstadisticas
 
 ' Mantenimiento
-class MantenimientoVehiculo{
-   -fechaMantenimiento: Date
-   -costo: number
-   -matricula: string
-   + setters_y_getters()
+class MantenimientoDeVehiculo {
+   - fechaMantenimiento: Date
+   - costo: number
+   - vehiculo: Vehiculo
+
+   + getters_y_setters()
 }
 
-class GestorDeMantenimiento{
-   - vehiculosEnMantenimiento: MantenimientoVehiculo[]
-   + registrarMantenimiento(vehiculo: MantenimientoVehiculo) : void
+class GestorDeMantenimiento {
+   - vehiculosEnMantenimiento: Array<MantenimientoDeVehiculo>
+
+   + registrarMantenimiento(vehiculo: MantenimientoDeVehiculo) : void
+   + procesarMantenimiento(vehiculo: Vehiculo): void
 }
 
-GestorDeMantenimiento o-- MantenimientoVehiculo
-GestorKilometraje *-- RegistroDia
+GestorDeMantenimiento o-- MantenimientoDeVehiculo
+GestorDeMantenimiento *-- GestionDeReservas
 
 Vehiculo ..> EstadoVehiculo : usa
 ' Reportes y Estadisticas
@@ -186,27 +216,32 @@ class GestorEstadisticas {
    - alquiler: EstadisticaDeAlquiler
    - ocupacion: EstadisticaDeOcupacion
 
-   -- getters y setters -- 
+   + vehiculoMasAlquilado (reservas: Array<Reserva>, fechaInicio: Date, fechaFin: Date): string
+   + vehiculoMenosAlquilado (reservas: Array<Reserva>, fechaInicio: Date, fechaFin: Date): string
+   + mayorRentabilidad (reservas: Reserva[], mantenimientos: MantenimientoDeVehiculo[]): Vehiculo
+   + menorRentabilidad (reservas: Reserva[], mantenimientos: MantenimientoDeVehiculo[]): Vehiculo
+   + ocupacionFlota (vehiculos: Array <Vehiculo>): number
 }
 
-class EstadisticaDeRentabilidad{
-   + mayorRentabilidad(reservas: Reserva[], mantenimiento: MantenimientoVehiculo[]): Vehiculo
-   + menorRentabilidad(reservas: Reserva[], mantenimiento: MantenimientoVehiculo[]): Vehiculo
+class EstadisticaDeRentabilidad {
+   + mayorRentabilidad(reservas: Reserva[], mantenimiento: Array<MantenimientoDeVehiculo>): Vehiculo
+   + menorRentabilidad(reservas: Reserva[], mantenimiento: Array<MantenimientoDeVehiculo>): Vehiculo
 
    - obtenerIngresosPorVehiculo(reservas: Reserva[]): Map<matricula, ingresos>
-   - obtenerCostoMantenimiento(mantenimiento: MantenimientoVehiculo[]): Map<matricula, costo>
+   - obtenerCostoMantenimiento(mantenimiento: Array<MantenimientoDeVehiculo>): Map<matricula, costo>
 }
 
-class EstadisticaDeAlquiler{
-   + vehiculosMasAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): string
-   + vehiculosMenosAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): string
+class EstadisticaDeAlquiler {
+   + vehiculosMasAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): Vehiculo
+   + vehiculosMenosAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): Vehiculo
 
-   - obtenerMaximoMinimo(reservas: Reserva[], fechaInicio: Date, fechaFin: Date, obtenerMaximo?: boolean): string
+   - obtenerAlquilados(reservas: Reserva[], fechaInicio: Date, fechaFin: Date): Map<matricula, cantReservas>
 }
 
 class EstadisticaDeOcupacion {
-   - ocupacionFlota(vehiculos[]): number
    + porcentajeDeOcupacion(vehiculos[]): number
+   
+   - ocupacionFlota(vehiculos[]): number
 }
 
 GestorEstadisticas o-- EstadisticaDeRentabilidad

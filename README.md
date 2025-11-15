@@ -1,49 +1,38 @@
 # Alquiler de autos 🚗
 
-Proyecto desarrollado en **TypeScript**.
+# 🚗 DriveHub – Sistema de Gestión de Alquiler de Autos
 
----
+## 📌 Resumen del Proyecto
+DriveHub es una aplicación que gestiona una flota de vehículos y las reservas de sus clientes.  
+Permite crear vehículos, administrar alquileres, registrar kilometraje, calcular tarifas con recargos, aplicar variaciones por temporada, controlar mantenimiento automático y generar estadísticas de uso y rentabilidad.
 
-# 📥 Clonar el repositorio
-Primero, clona el repositorio y entra en la carpeta del proyecto:
+## 📂 Estructura del Proyecto
+  ```txt
+diagramas/
+  clases/       -> Diagrama de clases general de la aplicación
+  secuencia/    -> Diagrama de secuencia de 2 acciones internas
 
-```bash
-git clone https://github.com/AndresCastro-hub/Tp-Alquiler-de-autos.git
-cd Tp-Alquiler-de-autos
+tests/          -> Pruebas unitarias
+
+documentacion/  -> Documentación generada con TypeDoc
+
+src/
+  models/       -> Clases principales (Vehículos, Reserva, Cliente, etc.)
+  services/     -> Lógica de negocio (tarifas, mantenimiento, estadísticas)
+  constants/    -> Valores hardcodeados centralizados
+  errors/       -> Clases de excepciones
+  enums/        -> Enumeraciones de la aplicación
 ```
-
 # 📦 Instalar dependencias
 Instalá las dependencias necesarias para correr el proyecto:
 ```bash
 npm install
-```
-
-## Trabajar con ramas
-
-Asegurate de estar en la rama principal (main):
-```bash
-git checkout main 
-git pull origin main
-```
-Traete los ultimos cambios de la rama main 
-```bash
-git pull origin main
-```
-Creá una nueva rama a partir de main:
-```bash
-git checkout -b nombre-de-tu-rama
-```
-Subí tu rama al remoto:
-```bash
-git push origin nombre-de-tu-rama
 ```
 # 🚀 Levantar el proyecto
 Para ejecutar el proyecto en modo desarrollo:
 ```bash 
 npm run dev
 ```
-Con este comando no hace falta reiniciar el servidor cada vez que hagas un cambio.
-El proyecto usa ts-node-dev (similar a nodemon), que detecta los cambios en los archivos y reinicia automáticamente la aplicación.
 
 # 🧪 Correr los tests
 Este proyecto usa Jest para las pruebas. Para correr todos los tests:
@@ -51,11 +40,3 @@ Este proyecto usa Jest para las pruebas. Para correr todos los tests:
 npm test
 ```
 
-# 🔄 Flujo de trabajo recomendado
-- Clonar el repositorio
-- Crear una nueva rama desde main
-- Hacer los cambios necesarios
-- Correr los tests (npm test)
-- Subir la rama al remoto (git push origin nombre-de-tu-rama)
-- Crear un Pull Request hacia develop
-- Una vez que en develop funciona correctamente crear un pull request hacia el main

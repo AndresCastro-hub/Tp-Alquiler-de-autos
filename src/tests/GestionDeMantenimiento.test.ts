@@ -68,6 +68,7 @@ describe("GestorDeMantenimiento", () => {
   });
 
   it("debería finalizar el mantenimiento y cambiar el estado del vehículo a Disponible", ()=>{
+    gestor.finalizarMantenimiento(mockVehiculo1);
     expect(mockVehiculo1.setEstado).toHaveBeenCalledWith(EstadoVehiculo.Disponible);
   });
 });

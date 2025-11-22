@@ -1,7 +1,6 @@
 import ErrorVehiculoNoDisponible from "../errors/excepcionVehiculoNoDisponible";
 import Reserva from "../models/Reserva";
 import { Vehiculo } from "../models/Vehiculo";
-import GestorDeMantenimiento from "./GestionDeMantenimiento";
 
 /**
  * Gestiona las reservas de vehículos en el sistema.

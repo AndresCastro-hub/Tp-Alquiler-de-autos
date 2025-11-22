@@ -31,8 +31,7 @@ activate gR
     alt **[Estado es EstadoEnAlquiler]** (Bloque try)
         gR -> veh : finalizarAlquiler()
         activate veh
-            veh -> veh : this.estado.finalizarAlquiler(this)
-            Note right of veh : Estado actual es EstadoEnAlquiler
+            Note over veh : Estado actual es EstadoEnAlquiler
             veh -> eAlquiler : finalizarAlquiler(this)
             activate eAlquiler
 

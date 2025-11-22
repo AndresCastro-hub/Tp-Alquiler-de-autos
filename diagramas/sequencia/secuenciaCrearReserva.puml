@@ -1,4 +1,4 @@
-@startuml
+@startuml Crear Reserva
 title Creación de una Reserva
 
 participant Cliente
@@ -6,87 +6,99 @@ participant GestionReservas as "GestionReservas"
 participant Reserva as "Reserva"
 participant Vehiculo as "Vehiculo"
 participant Date as "Date"
-participant ErrorVehiculoNoDisponible as "ErrorVehiculoNoDisponible"
+participant EstadoDisponible as "EstadoDisponible"
 
 ' INICIO: Llamada inicial desde el "Cliente"
 Cliente -> GestionReservas : agregarReserva(reserva)
 activate GestionReservas
 
-' 1. Obtener datos de la Reserva
-GestionReservas -> Reserva : getVehiculo()
-activate Reserva
-Reserva --> GestionReservas : vehiculo
-deactivate Reserva
+    ' 1. Obtener datos de la Reserva
+    GestionReservas -> Reserva : getVehiculo()
+    activate Reserva
+    Reserva -->> GestionReservas : vehiculo
+    deactivate Reserva
 
-GestionReservas -> Reserva : getFechaInicioReserva()
-activate Reserva
-Reserva --> GestionReservas : fechaInicio
-deactivate Reserva
+    GestionReservas -> Reserva : getFechaInicioReserva()
+    activate Reserva
+    Reserva -->> GestionReservas : fechaInicio
+    deactivate Reserva
 
-GestionReservas -> Reserva : getFechaFinalReserva()
-activate Reserva
-Reserva --> GestionReservas : fechaFinal
-deactivate Reserva
+    GestionReservas -> Reserva : getFechaFinalReserva()
+    activate Reserva
+    Reserva -->> GestionReservas : fechaFinal
+    deactivate Reserva
 
-'Chequeo de Disponibilidad'
+    'Chequeo de Disponibilidad'
 
-GestionReservas -> GestionReservas : chequearDisponibilidad(vehiculo, fechaInicio, fechaFinal)
-activate GestionReservas
-    GestionReservas -> Vehiculo : getMatricula()
-    activate Vehiculo
-    Vehiculo --> GestionReservas : matricula
-    deactivate Vehiculo
+    GestionReservas -> GestionReservas : chequearDisponibilidad(vehiculo, fechaInicio, fechaFinal)
+    activate GestionReservas
+        GestionReservas --> reserva: getVehiculo().getMatricula()
+        activate reserva
+            reserva --> Vehiculo : getMatricula()
+            activate Vehiculo
+                Vehiculo -->> reserva : matricula
+            deactivate Vehiculo
 
-    note right : Filtra las reservas existentes.
+            reserva -->> GestionReservas : matricula
+        deactivate reserva
 
-    GestionReservas -> Date : getTime()
-    activate Date
-    Date --> GestionReservas : nuevoInicio
-    Date --> GestionReservas : nuevoFin
-    deactivate Date
+        note right : Filtra las reservas existentes.
 
-    loop por cada reserva r en reservasVehiculo
-        GestionReservas -> Reserva : getFechaInicioReserva().getTime()
-        activate Reserva
-        Reserva --> GestionReservas : inicio
-        deactivate Reserva
-        GestionReservas -> Reserva : getFechaFinReserva().getTime()
-        activate Reserva
-        Reserva --> GestionReservas : fin
-        deactivate Reserva
-        GestionReservas -> GestionReservas : Comprueba superposición
+        GestionReservas -> Date : getTime()
+        activate Date
+            Date -->> GestionReservas : nuevoInicio
+            Date -->> GestionReservas : nuevoFin
+        deactivate Date
+
+        loop por cada reserva r en reservasVehiculo
+            GestionReservas -> Reserva : getFechaInicioReserva().getTime()
+            activate Reserva
+                Reserva -->> GestionReservas : inicio
+            deactivate Reserva
+
+            GestionReservas -> Reserva : getFechaFinReserva().getTime()
+            activate Reserva
+                Reserva -->> GestionReservas : fin
+            deactivate Reserva
+
+            GestionReservas -> GestionReservas : Comprueba superposición
+        end
+
+        GestionReservas -->> GestionReservas : retorna !existeSuperposicion
+    deactivate GestionReservas
+
+    'Evaluación y Ejecución'
+
+    alt Existe superposicion de reservas
+        GestionReservas --x Cliente : ExcepcionVehiculoNoDisponible
     end
 
-    GestionReservas -> Vehiculo : getEstado()
-    activate Vehiculo
-    Vehiculo --> GestionReservas : estadoActual
-    deactivate Vehiculo
+    alt **[Estado es EstadoDisponible]** (Bloque try)
+        GestionReservas -> vehiculo: reservar()
+        activate vehiculo
+            Note over vehiculo : Estado actual es EstadoEnAlquiler
+            vehiculo -> EstadoDisponible : reservar(this)
+            activate EstadoDisponible
+                EstadoDisponible -> vehiculo : setEstado( new EstadoEnAlquiler() )
+                activate vehiculo
+                deactivate vehiculo
+            deactivate EstadoDisponible
+        deactivate vehiculo
+    else **[Otro Estado]** (Bloque catch)
+        GestionReservas -> vehiculo : reservar()
+        activate vehiculo
+            Note over vehiculo: Estado actual lanza la Excepción ErrorEstadoIncorrecto
+            vehiculo --x GestionReservas : Lanza Error
+        deactivate vehiculo
+        Note over GestionReservas: Se captura el error
+        GestionReservas --x Cliente : throw error (Re-lanzamiento)
+    end
 
-    GestionReservas --> GestionReservas : retorna !existeSuperposicion && elVehiculoEstaDisponible)
-deactivate GestionReservas
+    ' Persistir la Reserva
+    GestionReservas -> GestionReservas : this.reservas.push(reserva)
+    note right of GestionReservas : Agrega la reserva al array de reservas
 
- 'Evaluación y Ejecución'
-
-alt Vehículo NO Disponible
-    GestionReservas -> ErrorVehiculoNoDisponible : Lanza new ErrorVehiculoNoDisponible()
-    activate ErrorVehiculoNoDisponible
-    ErrorVehiculoNoDisponible --> Cliente : Excepción
-    deactivate ErrorVehiculoNoDisponible
-    deactivate GestionReservas
-end
-' Persistir la Reserva
-GestionReservas -> GestionReservas : this.reservas.push(reserva)
-note right : Agrega la reserva al array
-
-' Marcar Vehículo como En Alquiler
-GestionReservas -> GestionReservas : marcarVehiculoEnAlquiler(vehiculo)
-activate GestionReservas
-    GestionReservas -> Vehiculo : setEstado(EstadoVehiculo.EnAlquiler)
-    activate Vehiculo
-    deactivate Vehiculo
-deactivate GestionReservas
-
-GestionReservas --> Cliente : Retorno exitoso (void)
+    GestionReservas -->> Cliente : Retorno exitoso (void)
 deactivate GestionReservas
 
 @enduml

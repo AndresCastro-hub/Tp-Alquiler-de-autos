@@ -5,7 +5,6 @@ import { Vehiculo } from "../Vehiculo";
 import ErrorEstadoIncorrecto from "../../errors/excepcionEstadoIncorrecto";
 
 export default class EstadoEnAlquiler implements IEstadoVehiculo {
-    private nombreEstado: string = "En Alquiler";
     public reservar(vehiculo: Vehiculo): void {
         throw new ErrorVehiculoNoDisponible(`El vehículo ${vehiculo.getMatricula()} está en alquiler, no se encuentra disponible.`);
     }

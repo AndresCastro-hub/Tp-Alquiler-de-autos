@@ -76,7 +76,6 @@ export default class GestionDeReservas {
         const vehiculo = reserva.getVehiculo();
         const cantidadDeKilometrosRecorridos = reserva.getGestionDelKilometraje().getTotalKmRecorridos();
         vehiculo.actualizarKMRecorridos(cantidadDeKilometrosRecorridos);
-        //this.gestorMantenimiento.procesarMantenimiento(vehiculo);
         try{
             vehiculo.finalizarAlquiler();
         } catch (error) {

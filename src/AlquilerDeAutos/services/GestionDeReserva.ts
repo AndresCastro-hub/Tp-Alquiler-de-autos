@@ -14,8 +14,7 @@ export default class GestionDeReservas {
 
     /**
      * Inicializa el gestor de reservas.
-     * 
-     * @param {GestorDeMantenimiento} gestorDeMantenimiento - Gestor responsable del mantenimiento de vehículos
+     * * @constructor
      */
     
     constructor() {
@@ -24,15 +23,14 @@ export default class GestionDeReservas {
 
     /**
      * Agrega una nueva reserva al sistema.
-     * 
-     * Verifica que el vehículo esté disponible en las fechas solicitadas.
-     * Si es válida, marca el vehículo como "En Alquiler".
-     * 
-     * @param {Reserva} reserva - Reserva a agregar
-     * @throws {ErrorVehiculoNoDisponible} Si el vehículo no está disponible en esas fechas
-     * 
-     * @example
-     * const reserva = new Reserva(cliente, vehiculo, gestor, inicio, fin, gestorTemporada);
+     * * * Verifica la disponibilidad del vehículo y, si es válida, cambia el estado del vehículo a 'En Alquiler'.
+     * * @public
+     * @param {Reserva} reserva - Reserva a agregar.
+     * @returns {void}
+     * @throws {ErrorVehiculoNoDisponible} Si hay superposición de fechas.
+     * @throws {Error} Propaga error si el estado actual del vehículo no permite la reserva (ej. está en Mantenimiento).
+     * * @example
+     * const reserva = new Reserva(cliente, vehiculo, inicio, fin, gestorTemporada);
      * gestionDeReservas.agregarReserva(reserva);
      */
     
@@ -59,14 +57,12 @@ export default class GestionDeReservas {
 
     /**
      * Cierra una reserva completada.
-     * 
-     * Actualiza el kilometraje del vehículo, procesa el mantenimiento
-     * si es necesario y retorna el costo total de la reserva.
-     * 
-     * @param {Reserva} reserva - Reserva a cerrar
-     * @returns {number} Costo total del alquiler
-     * 
-     * @example
+     * * * Actualiza el kilometraje del vehículo, llama a {@link Vehiculo.finalizarAlquiler | finalizarAlquiler()} para actualizar su estado y retorna el costo.
+     * * @public
+     * @param {Reserva} reserva - Reserva a cerrar.
+     * @returns {number} Costo total del alquiler.
+     * @throws {Error} Propaga error si el vehículo no está en estado 'En Alquiler'.
+     * * @example
      * const costo = gestionDeReservas.cerrarReserva(reserva);
      * console.log(`Total a pagar: $${costo}`);
      */
@@ -86,16 +82,12 @@ export default class GestionDeReservas {
 
     /**
      * Verifica si un vehículo está disponible en un período específico.
-     * 
-     * Comprueba:
-     * - El estado del vehículo sea "Disponible"
-     * - No haya superposición con otras reservas en esas fechas
-     * 
-     * @private
-     * @param {Vehiculo} vehiculo - Vehículo a verificar
-     * @param {Date} fechaInicio - Fecha de inicio solicitada
-     * @param {Date} fechaFinal - Fecha de fin solicitada
-     * @returns {boolean} true si está disponible, false en caso contrario
+     * * * Comprueba que no haya superposición de fechas con otras reservas existentes.
+     * * @private
+     * @param {Vehiculo} vehiculo - Vehículo a verificar.
+     * @param {Date} fechaInicio - Fecha de inicio solicitada.
+     * @param {Date} fechaFinal - Fecha de fin solicitada.
+     * @returns {boolean} `true` si está disponible, `false` en caso contrario.
      */
     
     private chequearDisponibilidad(vehiculo: Vehiculo, fechaInicio: Date, fechaFinal: Date): boolean {

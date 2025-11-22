@@ -13,14 +13,11 @@ export default class GestorDeMantenimiento{
 
     /**
      * Registra un nuevo mantenimiento para un vehículo.
-     * 
-     * Crea un registro de mantenimiento con la fecha actual
-     * y lo agrega a la lista de vehículos en mantenimiento.
-     * 
-     * @param {Vehiculo} vehiculo - Vehículo a registrar para mantenimiento
-     * 
-     * @example
-     * const vehiculo = new Compacto("ABC-123", EstadoVehiculo.Disponible, 0);
+     * * Crea un registro de mantenimiento con la fecha actual y lo agrega a la lista.
+     * * @public
+     * @param {Vehiculo} vehiculo - Vehículo a registrar.
+     * * @example
+     * const vehiculo = new Compacto("ABC-123", 0);
      * gestorDeMantenimiento.registrarMantenimiento(vehiculo);
      */
     
@@ -31,6 +28,16 @@ export default class GestorDeMantenimiento{
         this.vehiculosEnMantenimiento.push(mantenimientoNuevo)
     }
 
+    /**
+     * Finaliza el mantenimiento de un vehículo, delegando la acción al objeto Vehiculo.
+     * * * Llama al método {@link Vehiculo.finalizarMantenimiento | finalizarMantenimiento()}
+     * * * y registra el mantenimiento como completado.
+     * * @public
+     * @param {Vehiculo} vehiculo - Vehículo cuyo mantenimiento se va a finalizar.
+     * @returns {void}
+     * @throws {Error} Propaga cualquier error si el vehículo no está en estado 'Mantenimiento'.
+     */
+    
     public finalizarMantenimiento(vehiculo: Vehiculo): void{
         try{
             vehiculo.finalizarMantenimiento();

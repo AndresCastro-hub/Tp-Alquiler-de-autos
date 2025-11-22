@@ -25,13 +25,14 @@ export abstract class Vehiculo {
     private mantenimiento: VehiculoMantenimiento;
 
     /**
-     * Crea una nueva instancia de vehiculo
-     * 
-     * @param matricula - Matricula del vehiculo
-     * @param estado - Estado actual del vehiculo (disponible, en alquiler, en mantenmiento)
-     * @param contadorKm - Kilometraje total acumulado del vehiculo
+     * Crea una nueva instancia de vehiculo.
+     * * Inicializa el vehículo en estado {@link EstadoDisponible}.
+     * * Inicializa el módulo de mantenimiento con el kilometraje inicial.
+     * * @constructor
+     * @param matricula - Matrícula del vehiculo.
+     * @param contadorKm - Kilometraje total acumulado del vehiculo.
      */
-
+    
     constructor(matricula: string, contadorKm: number) {
         this.matricula = matricula;
         this.estado = new EstadoDisponible();
@@ -99,34 +100,75 @@ export abstract class Vehiculo {
         this.contadorKm += km;
     }
 
+    /**
+     * Determina si el vehículo ha alcanzado los umbrales (kilómetros o ciclos de alquiler) que requieren mantenimiento.
+     * * @returns {boolean} `true` si se necesita mantenimiento; `false` en caso contrario.
+     */
+    
     public necesitaMantenimiento(): boolean {
         return this.mantenimiento.necesitaMantenimiento(this.contadorKm);
     }
 
+    /**
+     * Incrementa el contador interno de ciclos de alquiler completados por el vehículo.
+     * * @returns {void}
+     */
+    
     public incrementarAlquiler(): void {
         this.mantenimiento.incrementarAlquiler();
     }
 
+    /**
+     * Resetea los contadores internos del vehículo utilizados para determinar el próximo mantenimiento (km desde el último servicio y ciclos de alquiler).
+     * * @returns {void}
+     */
+    
     public resetearValoresMantenimiento(): void {
         this.mantenimiento.resetearValores();
     }
 
+    /**
+     * Actualiza el contador de kilometraje total del vehículo.
+     * @param kmRecorridos - Cantidad de kilómetros recorridos durante el último período (ej. alquiler).
+     * @returns {void}
+     */
+    
     public actualizarKMRecorridos(kmRecorridos: number): void{
         this.setContadorKm(this.getContadorKm() + kmRecorridos);
     }
 
+    /**
+     * Intenta reservar el vehículo, delegando la acción al objeto de estado actual.
+     * * @returns {void}
+     */
+    
     public reservar(): void {
         this.estado.reservar(this);
     }
 
+    /**
+     * Intenta finalizar el alquiler del vehículo, delegando la acción al objeto de estado actual.
+     * * @returns {void}
+     */
+    
     public finalizarAlquiler(): void {
         this.estado.finalizarAlquiler(this);
     }
 
+    /**
+     * Intenta finalizar el mantenimiento del vehículo, delegando la acción al objeto de estado actual.
+     * * @returns {void}
+     */
+    
     public finalizarMantenimiento(): void {
         this.estado.finalizarMantenimiento(this);
     }
 
+    /**
+     * Verifica si el estado actual del vehículo es 'En Alquiler', delegando la verificación al objeto de estado.
+     * * @returns {boolean} `true` si está en alquiler; `false` en caso contrario.
+     */
+    
     public estaEnAlquiler(): boolean {
         return this.estado.estaEnAlquiler();
     }

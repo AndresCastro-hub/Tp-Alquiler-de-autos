@@ -1,12 +1,21 @@
-import { EstadoVehiculo } from "../AlquilerDeAutos/enums/EstadoVehiculo";
+import IEstadoVehiculo from "../AlquilerDeAutos/models/EstadosVehiculo/IEstadoVehiculo";
 import { Vehiculo } from "../AlquilerDeAutos/models/Vehiculo";
 import EstadisticasDeOcupacion from "../AlquilerDeAutos/services/EstadisticasDeOcupacion";
 
-    const crearVehiculoMock = (estado: EstadoVehiculo) => ({
-    getEstado: () => estado,
-    } as Vehiculo);
+const mockEstado = (estaEnAlquiler: boolean): IEstadoVehiculo => ({
+    reservar: jest.fn(),
+    finalizarAlquiler: jest.fn(),
+    finalizarMantenimiento: jest.fn(),
+    estaEnAlquiler: () => estaEnAlquiler
+});
 
-    describe('EstadisticasDeOcupacion', () => {
+const crearVehiculoMock = (estado: IEstadoVehiculo) =>
+({
+    estaEnAlquiler: () => estado.estaEnAlquiler(),
+} as unknown as Vehiculo);
+
+
+describe('EstadisticasDeOcupacion', () => {
 
     let estadisticas: EstadisticasDeOcupacion;
 
@@ -16,41 +25,41 @@ import EstadisticasDeOcupacion from "../AlquilerDeAutos/services/EstadisticasDeO
 
     test('Calcula correctamente el 50% de ocupación', () => {
         const vehiculos: Array<Vehiculo> = [
-            crearVehiculoMock(EstadoVehiculo.EnAlquiler),
-            crearVehiculoMock(EstadoVehiculo.Disponible),
-            crearVehiculoMock(EstadoVehiculo.EnAlquiler),  
-            crearVehiculoMock(EstadoVehiculo.EnMantenimiento), 
+            crearVehiculoMock(mockEstado(true)),   // En alquiler
+            crearVehiculoMock(mockEstado(false)),  // Disponible
+            crearVehiculoMock(mockEstado(true)),   // En alquiler
+            crearVehiculoMock(mockEstado(false)),  // Mantenimiento
         ];
-        
+
         const porcentaje = estadisticas.porcentajeDeOcupacion(vehiculos);
-        
+
         expect(porcentaje).toBe(50);
     });
-    
-    test('Calcula el 100% de ocupación cuando todos están EnAlquiler', () => {
+
+    test('Calcula el 100% de ocupación', () => {
         const vehiculos: Array<Vehiculo> = [
-            crearVehiculoMock(EstadoVehiculo.EnAlquiler),
-            crearVehiculoMock(EstadoVehiculo.EnAlquiler),
-            crearVehiculoMock(EstadoVehiculo.EnAlquiler),
+            crearVehiculoMock(mockEstado(true)),
+            crearVehiculoMock(mockEstado(true)),
+            crearVehiculoMock(mockEstado(true)),
         ];
-        
+
         const porcentaje = estadisticas.porcentajeDeOcupacion(vehiculos);
-        
+
         expect(porcentaje).toBe(100);
     });
 
-    test('Calcula 0% de ocupación cuando no hay vehículos EnAlquiler', () => {
+    test('Calcula 0% de ocupación', () => {
         const vehiculos: Array<Vehiculo> = [
-            crearVehiculoMock(EstadoVehiculo.Disponible),
-            crearVehiculoMock(EstadoVehiculo.EnMantenimiento),
+            crearVehiculoMock(mockEstado(false)),
+            crearVehiculoMock(mockEstado(false)),
         ];
-        
+
         const porcentaje = estadisticas.porcentajeDeOcupacion(vehiculos);
-        
+
         expect(porcentaje).toBe(0);
     });
 
-    test('Lanza un error si la flota esta vacia', () => {
+    test('Lanza un error si la flota está vacía', () => {
         const vehiculos: Array<Vehiculo> = [];
 
         expect(() => {

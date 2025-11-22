@@ -3,17 +3,17 @@
 title "Drivehub"
 scale 1.3
 
-enum EstadoVehiculo {
-   Disponible
-   EnAlquiler
-   EnMantenimiento
-   NecesitaLimpieza
-}
+'enum EstadoVehiculo {
+'   Disponible
+'   EnAlquiler
+'   EnMantenimiento
+'   NecesitaLimpieza
+'}
 
 ' Vehiculos
 abstract class Vehiculo {
    - matricula: string
-   - estado: EstadoVehiculo
+   - estado: IEstadoVehiculo
    - contadorKm: number
    - tarifaBase: number
    - tarifaExtra: number
@@ -27,6 +27,9 @@ abstract class Vehiculo {
    + incrementarAlquiler(): void
    + resetearValoresMantenimiento(): void
    + actualizarKMRecorridos(kmRecorridos: number): void
+   + reservar(vehiculo: Vehiculo): void
+   + finalizarAlquiler(vehiculo: Vehiculo):void
+   + finalizarMantenimiento(vehiculo: Vehiculo): void
 }
 
 class Compacto {
@@ -88,7 +91,7 @@ Vehiculo <|-- Suv
 Vehiculo *-r- VehiculoMantenimiento
 
 GestorDeTemporada *-- TemporadaBase
-GestorDeTemporada *-u- Reserva
+GestorDeTemporada -u-* Reserva
 
 TemporadaBase <|-- TemporadaAlta
 TemporadaBase <|-- TemporadaMedia
@@ -150,12 +153,10 @@ class GestorKilometraje {
 
 class GestionDeReservas {
    - reservas: Array<Reserva>
-   - gestorMantenimiento: GestionDeMantenimiento
 
    + agregarReserva(reserva: Reserva): void
    + cerrarReserva(reserva: Reserva): number
    - chequearDisponibilidad(vehiculo: Vehiculo, fechaInicio: Date, fechaFinal: Date): boolean
-   - marcarVehiculoEnAlquiler(vehiculo: Vehiculo): void
 }
 
 GestionDeReservas *-- Reserva
@@ -202,14 +203,11 @@ class GestionDeMantenimiento {
    - vehiculosEnMantenimiento: Array<MantenimientoDeVehiculo>
 
    + registrarMantenimiento(vehiculo: MantenimientoDeVehiculo) : void
-   + procesarMantenimiento(vehiculo: Vehiculo): void
    + finalizarMantenimiento(vehiculo: Vehiculo): void
 }
 
 GestionDeMantenimiento o-- MantenimientoDeVehiculo
-GestionDeMantenimiento *-- GestionDeReservas
 
-Vehiculo ..> EstadoVehiculo : usa
 ' Reportes y Estadisticas
 
 class GestorEstadisticas {
@@ -248,5 +246,35 @@ class EstadisticaDeOcupacion {
 GestorEstadisticas o-- EstadisticaDeRentabilidad
 GestorEstadisticas o-- EstadisticaDeAlquiler
 GestorEstadisticas o-- EstadisticaDeOcupacion
+
+interface IEstadoVehiculo {
+   + reservar(vehiculo: Vehiculo): void
+   + finalizarAlquiler(vehiculo: Vehiculo):void
+   + finalizarMantenimiento(vehiculo: Vehiculo): void
+}
+
+class EstadoDisponible {
+   + reservar(vehiculo: Vehiculo): void
+   + finalizarAlquiler(vehiculo: Vehiculo):void
+   + finalizarMantenimiento(vehiculo: Vehiculo): void
+}
+
+class EstadoEnAlquiler {
+   + reservar(vehiculo: Vehiculo): void
+   + finalizarAlquiler(vehiculo: Vehiculo):void
+   + finalizarMantenimiento(vehiculo: Vehiculo): void
+}
+
+class EstadoMantenimiento {
+   + reservar(vehiculo: Vehiculo): void
+   + finalizarAlquiler(vehiculo: Vehiculo):void
+   + finalizarMantenimiento(vehiculo: Vehiculo): void
+}
+
+IEstadoVehiculo <|.. EstadoDisponible
+IEstadoVehiculo <|.. EstadoEnAlquiler
+IEstadoVehiculo <|.. EstadoMantenimiento
+
+Vehiculo *-- IEstadoVehiculo
 
 ' Dep

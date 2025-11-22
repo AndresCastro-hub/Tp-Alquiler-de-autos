@@ -1,8 +1,6 @@
-import { EstadoVehiculo } from "../enums/EstadoVehiculo";
 import ErrorVehiculoNoDisponible from "../errors/excepcionVehiculoNoDisponible";
 import Reserva from "../models/Reserva";
 import { Vehiculo } from "../models/Vehiculo";
-import GestorDeMantenimiento from "./GestionDeMantenimiento";
 
 /**
  * Gestiona las reservas de vehículos en el sistema.
@@ -13,7 +11,6 @@ import GestorDeMantenimiento from "./GestionDeMantenimiento";
 
 export default class GestionDeReservas {
     private reservas: Reserva[];
-    private gestorMantenimiento: GestorDeMantenimiento;
 
     /**
      * Inicializa el gestor de reservas.
@@ -21,9 +18,8 @@ export default class GestionDeReservas {
      * @param {GestorDeMantenimiento} gestorDeMantenimiento - Gestor responsable del mantenimiento de vehículos
      */
     
-    constructor(gestorDeMantenimiento: GestorDeMantenimiento) {
+    constructor() {
         this.reservas = [];
-        this.gestorMantenimiento = gestorDeMantenimiento;
     }
 
     /**
@@ -49,11 +45,16 @@ export default class GestionDeReservas {
         const elVehiculoEstaDisponible = this.chequearDisponibilidad(vehiculo, fechaInicio, fechaFinal);
 
         if (!elVehiculoEstaDisponible) {
-            throw new ErrorVehiculoNoDisponible(`El vehículo ${reserva.getVehiculo().getMatricula()} no está disponible en esas fechas porque esta en estado: ${vehiculo.getEstado()}.`);
+            throw new ErrorVehiculoNoDisponible(`El vehículo ${reserva.getVehiculo().getMatricula()} no está disponible en esas fechas.`);
+        }
+        
+        try {
+            vehiculo.reservar();
+        } catch (error) {
+            throw error;
         }
 
         this.reservas.push(reserva);
-        this.marcarVehiculoEnAlquiler(reserva.getVehiculo())
     }
 
     /**
@@ -74,8 +75,12 @@ export default class GestionDeReservas {
         const vehiculo = reserva.getVehiculo();
         const cantidadDeKilometrosRecorridos = reserva.getGestionDelKilometraje().getTotalKmRecorridos();
         vehiculo.actualizarKMRecorridos(cantidadDeKilometrosRecorridos);
-        this.gestorMantenimiento.procesarMantenimiento(vehiculo);
-
+        try{
+            vehiculo.finalizarAlquiler();
+        } catch (error) {
+            throw error;
+        }
+        
         return reserva.calcularCostoTotal();
     }
 
@@ -107,19 +112,6 @@ export default class GestionDeReservas {
             return nuevoInicio <= fin && nuevoFin >= inicio;
         });
 
-        const elVehiculoEstaDisponible = vehiculo.getEstado() === EstadoVehiculo.Disponible
-
-        return !existeSuperposicion && elVehiculoEstaDisponible;
-    }
-
-    /**
-     * Marca un vehículo como "En Alquiler".
-     * 
-     * @private
-     * @param {Vehiculo} vehiculo - Vehículo a marcar
-     */
-    
-    private marcarVehiculoEnAlquiler(vehiculo: Vehiculo): void {
-        vehiculo.setEstado(EstadoVehiculo.EnAlquiler);
+        return !existeSuperposicion;
     }
 }

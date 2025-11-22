@@ -45,30 +45,18 @@ describe("GestorDeMantenimiento", () => {
     expect(registros[1].getVehiculo().getMatricula()).toBe("XYZ789");
   });
 
-  it("debería procesar mantenimiento cuando el vehículo lo necesita", () => {
-    mockVehiculo1.necesitaMantenimiento.mockReturnValue(true);
+  it("debería registrar un mantenimiento nuevo", () => {
+    gestor.registrarMantenimiento(mockVehiculo1);
 
-    gestor.procesarMantenimiento(mockVehiculo1);
-
-    expect(mockVehiculo1.incrementarAlquiler).toHaveBeenCalled();
-    expect(mockVehiculo1.setEstado).toHaveBeenCalledWith(EstadoVehiculo.EnMantenimiento);
-    expect(mockVehiculo1.resetearValoresMantenimiento).toHaveBeenCalled();
     expect(gestor["vehiculosEnMantenimiento"].length).toBe(1);
-  });
+});
 
-  it("no debería registrar mantenimiento cuando el vehículo no lo necesita", () => {
-    mockVehiculo1.necesitaMantenimiento.mockReturnValue(false);
+  it("debería llamar a vehiculo.finalizarMantenimiento y registrar mantenimiento", () => {
+    mockVehiculo1.finalizarMantenimiento = jest.fn();
 
-    gestor.procesarMantenimiento(mockVehiculo1);
-
-    expect(mockVehiculo1.incrementarAlquiler).toHaveBeenCalled();
-    expect(mockVehiculo1.setEstado).not.toHaveBeenCalled();
-    expect(mockVehiculo1.resetearValoresMantenimiento).not.toHaveBeenCalled();
-    expect(gestor["vehiculosEnMantenimiento"].length).toBe(0);
-  });
-
-  it("debería finalizar el mantenimiento y cambiar el estado del vehículo a Disponible", ()=>{
     gestor.finalizarMantenimiento(mockVehiculo1);
-    expect(mockVehiculo1.setEstado).toHaveBeenCalledWith(EstadoVehiculo.Disponible);
-  });
+
+    expect(mockVehiculo1.finalizarMantenimiento).toHaveBeenCalled();
+    expect(gestor["vehiculosEnMantenimiento"].length).toBe(1);
+});
 });

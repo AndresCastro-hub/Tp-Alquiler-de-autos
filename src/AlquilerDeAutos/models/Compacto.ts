@@ -24,8 +24,8 @@ export default class Compacto extends Vehiculo{
      * @param contadorKm - Cantidad de km acumulados del vehiculo
      */
 
-    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number){
-        super(matricula, estado, contadorKm);
+    constructor(matricula: string, contadorKm: number){
+        super(matricula, contadorKm);
         this.setTarifaBase(TARIFAS_AUTOS.COMPACTO.BASE);
         this.setTarifaExtra(TARIFAS_AUTOS.COMPACTO.EXTRA);
     }

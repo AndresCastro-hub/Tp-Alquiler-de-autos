@@ -1,4 +1,3 @@
-import { EstadoVehiculo } from "../enums/EstadoVehiculo";
 import { Vehiculo } from "../models/Vehiculo";
 import MantenimientoDeVehiculo from "./MantenimientoDeVehiculo";
 
@@ -32,30 +31,12 @@ export default class GestorDeMantenimiento{
         this.vehiculosEnMantenimiento.push(mantenimientoNuevo)
     }
 
-    /**
-     * Procesa el mantenimiento de un vehículo.
-     * 
-     * Incrementa el contador de alquileres del vehículo y verifica
-     * si necesita mantenimiento. Si lo requiere, cambia su estado
-     * a "En Mantenimiento" y registra el mantenimiento.
-     * 
-     * @param {Vehiculo} vehiculo - Vehículo a procesar
-     * 
-     * @example
-     * gestorDeMantenimiento.procesarMantenimiento(vehiculo);
-     */
-    
-    public procesarMantenimiento(vehiculo: Vehiculo): void{
-        vehiculo.incrementarAlquiler();
-        
-        if (vehiculo.necesitaMantenimiento()) {
-            vehiculo.setEstado(EstadoVehiculo.EnMantenimiento);
-            this.registrarMantenimiento(vehiculo);
-            vehiculo.resetearValoresMantenimiento();
-        }
-    }
-
     public finalizarMantenimiento(vehiculo: Vehiculo): void{
-        vehiculo.setEstado(EstadoVehiculo.Disponible);
+        try{
+            vehiculo.finalizarMantenimiento();
+            this.registrarMantenimiento(vehiculo);
+        } catch (error) {
+            throw error;
+        }
     }
 }

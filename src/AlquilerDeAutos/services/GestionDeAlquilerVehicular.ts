@@ -32,7 +32,7 @@ export default class GestionDeAlquilerVehicular{
         this.gestorDeMantenimiento = new GestorDeMantenimiento()
         this.gestionDeVehiculos = new GestionDeVehiculos()
         this.gestionDeClientes = new GestionDeClientes()
-        this.gestionDeReservas = new GestionDeReservas(this.gestorDeMantenimiento)
+        this.gestionDeReservas = new GestionDeReservas()
     }
 
     /**
@@ -63,6 +63,16 @@ export default class GestionDeAlquilerVehicular{
     
     public getGestionDeReservas() : GestionDeReservas{
         return this.gestionDeReservas
+    }
+
+    /**
+     * Obtiene el gestor de mantenimiento.
+     * 
+     * @returns {GestorDeMantenimiento} Gestor para administrar mantenimiento (registrar, finalizar, etc.)
+     */
+    
+    public getGestorDeMantenimiento() : GestorDeMantenimiento{
+        return this.gestorDeMantenimiento
     }
 
 }

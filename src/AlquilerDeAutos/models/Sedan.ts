@@ -17,11 +17,10 @@ import { Vehiculo } from "./Vehiculo";
 export default class Sedan extends Vehiculo {
 
     /**
-     * Crea una nueva instancia de vehiculo tipo Sedan
-     * 
-     * @param matricula - Matricula del vehiculo
-     * @param estado - Estado actual del vehiculo (disponible, en alquiler o mantenmiento)
-     * @param contadorKm - Cantidad de km acumulados del vehiculo
+     * Crea una nueva instancia de vehículo tipo Sedan.
+     * * @constructor
+     * @param matricula - Matricula del vehiculo.
+     * @param contadorKm - Kilometraje total acumulado del vehiculo.
      */
     constructor(matricula: string, contadorKm: number) {
         super(matricula, contadorKm);
@@ -30,11 +29,12 @@ export default class Sedan extends Vehiculo {
     }
 
     /**
-     * Calcula el costo total del alquiler del vehiculo Sedan
-     * 
-     * @param totalDelRecorrido - Arreglo de objetos {@link RegistroDia} con los kilómetros recorridos por día.
-     * @param temporada - Temporada vigente (alta, media o baja)
-     * @returns El monto total del alquiler y los km recorridos
+     * Calcula el costo total del alquiler del vehículo Sedan.
+     * * * La fórmula suma la tarifa base diaria ajustada por temporada (multiplicada por los días)
+     * * * más el total de kilómetros recorridos multiplicado por la tarifa extra.
+     * * @param totalDelRecorrido - Arreglo de objetos {@link RegistroDia} con los kilómetros recorridos por día.
+     * @param temporada - Temporada vigente (alta, media o baja).
+     * @returns {number} El monto total del alquiler.
      */
     calcularTarifa(totalDelRecorrido: RegistroDia[], temporada: TemporadaBase): number {
         const diasTranscurridos = totalDelRecorrido.length;

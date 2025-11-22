@@ -19,11 +19,10 @@ export default class Suv extends Vehiculo {
     private tarifaFijaSeguro: number
 
     /**
-     * Crea una nueva instancia de vehiculo SUV
-     * 
-     * @param matricula - Matricula del vehiculo
-     * @param estado - Estado actual del vehiculo (disponible, en alquiler, mantenimiento)
-     * @param contadorKm - Cantidad de km acumulados del vehiculo
+     * Crea una nueva instancia de vehículo tipo SUV.
+     * * @constructor
+     * @param matricula - Matricula del vehiculo.
+     * @param contadorKm - Kilometraje total acumulado del vehiculo.
      */
 
     constructor(matricula: string, contadorKm: number) {
@@ -34,11 +33,12 @@ export default class Suv extends Vehiculo {
     }
 
     /**
-     * Calcula el costo total del alquiler del vehiculo SUV
-     * 
-     * @param totalDelRecorrido - Arreglo de objetos {@link RegistroDia} con los kilómetros recorridos por día.
-     * @param temporada - Temporada vigente (alta, media o baja)
-     * @returns El monto total del alquiler y los km recorridos
+     * Calcula el costo total del alquiler del vehículo SUV.
+     * * * La fórmula suma la tarifa base diaria ajustada por temporada, más la tarifa fija diaria del seguro,
+     * * * más un cargo variable por kilómetro si el total de km recorridos supera los 500 km.
+     * * @param totalDelRecorrido - Arreglo de objetos {@link RegistroDia} con los kilómetros recorridos por día.
+     * @param temporada - Temporada vigente (alta, media o baja).
+     * @returns {number} El monto total del alquiler.
      */
 
     calcularTarifa(totalDelRecorrido: RegistroDia[], temporada: TemporadaBase): number {

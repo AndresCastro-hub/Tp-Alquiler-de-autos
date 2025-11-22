@@ -16,12 +16,11 @@ import { Vehiculo } from "./Vehiculo";
  */
 export default class Compacto extends Vehiculo{
 
-    /**
-     * Crea una nueva instancia de vehiculo Compacto
-     * 
-     * @param matricula - Matricula del vehiculo
-     * @param estado - Estado actual del vehiculo (disponible, en alquiler, mantenimiento)
-     * @param contadorKm - Cantidad de km acumulados del vehiculo
+/**
+     * Crea una nueva instancia de vehículo Compacto.
+     * * @constructor
+     * @param matricula - Matricula del vehiculo.
+     * @param contadorKm - Kilometraje total acumulado del vehiculo.
      */
 
     constructor(matricula: string, contadorKm: number){
@@ -31,11 +30,12 @@ export default class Compacto extends Vehiculo{
     }
 
     /**
-     * Calcula el costo total del alquiler del vehiculo Compacto
-     * 
-     * @param totalDelRecorrido - Arreglo de objetos {@link RegistroDia} con los kilómetros recorridos por día.
-     * @param temporada - Temporada vigente (alta, media o baja)
-     * @returns El monto total del alquiler y los km recorridos
+     * Calcula el costo total del alquiler del vehículo Compacto.
+     * * * La fórmula incluye la tarifa base diaria ajustada por temporada y la tarifa extra
+     * por cada kilómetro excedido sobre el límite diario de 100 km.
+     * * @param totalDelRecorrido - Arreglo de objetos {@link RegistroDia} con los kilómetros recorridos por día.
+     * @param temporada - Temporada vigente (alta, media o baja).
+     * @returns {number} El monto total del alquiler.
      */
     calcularTarifa(totalDelRecorrido: RegistroDia[], temporada: TemporadaBase): number{
 

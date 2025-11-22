@@ -32,7 +32,7 @@ export default class GestionDeAlquilerVehicular{
         this.gestorDeMantenimiento = new GestorDeMantenimiento()
         this.gestionDeVehiculos = new GestionDeVehiculos()
         this.gestionDeClientes = new GestionDeClientes()
-        this.gestionDeReservas = new GestionDeReservas(this.gestorDeMantenimiento)
+        this.gestionDeReservas = new GestionDeReservas()
     }
 
     /**

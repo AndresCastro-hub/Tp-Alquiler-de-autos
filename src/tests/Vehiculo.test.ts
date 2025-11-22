@@ -1,13 +1,25 @@
-import { EstadoVehiculo } from "../AlquilerDeAutos/enums/EstadoVehiculo";
+import EstadoDisponible from "../AlquilerDeAutos/models/EstadosVehiculo/EstadoDisponible";
+import EstadoEnAlquiler from "../AlquilerDeAutos/models/EstadosVehiculo/EstadoEnAlquiler";
 import TemporadaBase from "../AlquilerDeAutos/models/TemporadaBase";
 import { Vehiculo } from "../AlquilerDeAutos/models/Vehiculo";
+
+class VehiculoMock extends Vehiculo {
+    constructor() {
+        super("ABC123", 0);
+    }
+
+    calcularTarifa(): number {
+        return 0;
+    }
+}
+
 
 class testVehiculo extends Vehiculo {
     calcularTarifa(): number {
         throw new Error("Method not implemented.");
     }
-    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number) {
-        super(matricula, estado, contadorKm);
+    constructor(matricula: string, contadorKm: number) {
+        super(matricula, contadorKm);
     }
 }
 
@@ -21,7 +33,7 @@ describe("Test de la clase abstracta Vehiculo", () => {
     let vehiculo: Vehiculo;
 
     beforeEach(() => {
-        vehiculo = new testVehiculo("ABC123", EstadoVehiculo.Disponible, 50);
+        vehiculo = new testVehiculo("ABC123", 50);
         vehiculo.setTarifaBase(10000);
         vehiculo.setTarifaExtra(0.5);
         (vehiculo as any).mantenimiento = {
@@ -32,13 +44,14 @@ describe("Test de la clase abstracta Vehiculo", () => {
 
     });
 
-    test("Verifica que el constructor de la clase Vehiculo instancie un objeto de tipo Vehiculo y asigne correctamente los valores de patente, estado, precioPorDia, duracionMinima, y costoSeguro", () => {
+
+    test("Constructor asigna correctamente sus valores", () => {
         expect(vehiculo).toBeInstanceOf(Vehiculo);
         expect(vehiculo.getMatricula()).toEqual("ABC123");
-        expect(vehiculo.getEstado()).toEqual(EstadoVehiculo.Disponible);
         expect(vehiculo.getContadorKm()).toEqual(50);
-        expect(vehiculo.getTarifaBase()).toEqual(10000);
-        expect(vehiculo.getTarifaExtra()).toEqual(0.5);
+        expect(vehiculo.getEstado()).toBeInstanceOf(EstadoDisponible);
+        expect(vehiculo.getTarifaBase()).toBe(10000);
+        expect(vehiculo.getTarifaExtra()).toBe(0.5);
     });
 
     test("Verificacion del getter de la propiedad matricula", () => {
@@ -52,15 +65,17 @@ describe("Test de la clase abstracta Vehiculo", () => {
         expect(vehiculo.getMatricula()).toEqual(nuevaMatricula);
     });
 
-    test("Verificacion del getter de la propiedad estado", () => {
-        const estadoEsperado: EstadoVehiculo = EstadoVehiculo.Disponible;
-        expect(vehiculo.getEstado()).toEqual(estadoEsperado);
+    test("Verificacion del getter de la propiedad estado inicial", () => {
+        expect(vehiculo.getEstado()).toBeInstanceOf(EstadoDisponible);
     });
 
-    test("Verificacion del setter de la propiedad estado", () => {
-        const nuevoEstado: EstadoVehiculo = EstadoVehiculo.EnAlquiler;
+    test("Verificación del setter de la propiedad estado", () => {
+        const vehiculo = new VehiculoMock();
+        const nuevoEstado = new EstadoEnAlquiler();
+
         vehiculo.setEstado(nuevoEstado);
-        expect(vehiculo.getEstado()).toEqual(nuevoEstado);
+
+        expect(vehiculo.getEstado()).toBe(nuevoEstado);
     });
 
     test("Verificacion del getter de la propiedad contadorKm", () => {

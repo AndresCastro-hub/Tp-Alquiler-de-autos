@@ -8,101 +8,96 @@ participant "GestorDeTemporada" as gT
 participant "GestorKilometraje" as gK
 participant "VehiculoMantenimiento" as vMant
 participant "Vehiculo" as veh
-participant "GestorDeMantenimiento" as gM
-participant "MantenimientoVehiculo" as mant
+participant "EstadoEnAlquiler" as eAlquiler
 
 user -> gR : cerrarReserva(reserva)
 
 activate gR
     gR -> res : getVehiculo()
     activate res
-        res --> gR : vehiculo
+        res -->> gR : vehiculo
     deactivate res
 
-    gR -> res : getGestionDelKilometraje()
+    gR -> res : getGestionDelKilometraje().getTotalKmRecorridos()
     activate res
-        res --> gR : GestorKilometraje
+        res -> gK : getTotalKmRecorridos()
+        activate gK
+            gK -->> res : cantidadDeKilometrosRecorridos
+        deactivate gK
+        res -->> gR : cantidadDeKilometrosRecorridos
     deactivate res
 
-    gR -> gK : getTotalKmRecorridos()
-    activate gK
-        gK --> gR : cantidadDeKilometrosRecorridos
-    deactivate gK
-
-    ' Actualizar KM y Mantenimiento
-    gR -> veh : actualizarKMRecorridos(cantidadDeKilometrosRecorridos)
-    activate veh
-        veh -> veh : getContadorKm()
+'Finalizar Alquiler
+    alt **[Estado es EstadoEnAlquiler]** (Bloque try)
+        gR -> veh : finalizarAlquiler()
         activate veh
-            veh --> veh : contadorKm
-        deactivate veh
-        veh -> veh : setContadorKm(contadorKm + cantidadDeKilometrosRecorridos)
-    deactivate veh
+            Note over veh : Estado actual es EstadoEnAlquiler
+            veh -> eAlquiler : finalizarAlquiler(this)
+            activate eAlquiler
 
-    gR -> gM : procesarMantenimiento(vehiculo)
-    activate gM
-        gM -> veh : incrementarAlquiler()
+                eAlquiler -> veh : incrementarAlquiler()
+                activate veh
+                deactivate veh
+
+                eAlquiler -> veh : necesitaMantenimiento()
+                activate veh
+                    veh -> vMant : necesitaMantenimiento(contadorKm)
+                    activate vMant
+                        vMant -->> veh : boolean
+                    deactivate vMant
+                    veh -->> eAlquiler : boolean
+                deactivate veh
+
+
+                alt [(true) (Necesita Mantenimiento)]
+                    eAlquiler -> veh : setEstado(new EstadoMantenimiento())
+                    activate veh
+                    deactivate veh
+
+                    eAlquiler -> veh : resetearValoresMantenimiento()
+                    activate veh
+                        veh -> vMant : resetearValoresMantenimiento()
+                        activate vMant
+                        deactivate vMant
+                    deactivate veh
+                end
+            deactivate eAlquiler
+        
+        deactivate veh
+
+    else **[Otro Estado]** (Bloque catch)
+        gR -> veh : finalizarAlquiler()
         activate veh
-            veh -> vMant: incrementarAlquiler()
+            Note over veh: Estado actual lanza la Excepción ErrorEstadoIncorrecto
+            veh --x gR : Lanza Error
         deactivate veh
-
-        gM -> veh : necesitaMantenimiento()
-        activate veh
-            veh -> vMant : necesitaMantenimiento(contadorKm)
-            activate vMant
-                vMant --> veh : boolean
-            deactivate vMant
-            veh --> gM : boolean (true/false)
-        deactivate veh
-
-        alt Si necesita mantenimiento (true)
-            gM -> veh : setEstado(EstadoVehiculo.EnMantenimiento)
-            activate veh
-            deactivate veh
-            
-            gM -> gM : registrarMantenimiento(vehiculo) ' <<Crea y configura el MantenimientoVehiculo>>
-            activate gM
-                create mant
-                gM -> mant **: new()
-                activate mant
-                    mant -> mant : setFechaMantenimiento(new Date())
-                    mant -> mant : setVehiculo(Vehiculo)
-                deactivate mant
-                gM -> gM : <<añade a array de vehiculosEnMantenimiento>>
-            deactivate gM
-
-            gM -> veh : resetearValoresMantenimiento()
-            activate veh
-                veh -> vMant: resetearValores()
-                activate vMant
-                deactivate vMant
-            deactivate veh
-        end
-
-    deactivate gM
+        Note over gR: Se captura el error
+        gR --x user : throw error (Re-lanzamiento)
+    end
 
     ' Calcular Costo Total
     gR -> res : calcularCostoTotal()
     activate res
         res -> gK : getInformacionDelRecorrido()
         activate gK
-            gK --> res : RegistroDia[]
+            gK -->> res : RegistroDia[]
         deactivate gK
 
         res -> gT : getTemporada(fechaInicioReserva)
         activate gT
-            gT --> res : TemporadaBase
+            gT -->> res : TemporadaBase
         deactivate gT
 
         res -> veh : calcularTarifa(informacionRecorrido, temporada)
         activate veh
-            veh --> res : costoTotal
+            veh -->> res : costoTotal
         deactivate veh
 
-        res --> gR : costoTotal
+        res -->> gR : costoTotal
     deactivate res
 
-    gR --> user : costoTotal
+    gR -->> user : costoTotal
+
 deactivate gR
 
 @enduml

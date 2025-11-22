@@ -1,4 +1,3 @@
-import { EstadoVehiculo } from "../enums/EstadoVehiculo";
 import { Vehiculo } from "../models/Vehiculo";
 
 /**
@@ -12,26 +11,25 @@ export default class EstadististicasDeOcupacion{
 
     /**
      * Cuenta cuántos vehículos están actualmente en alquiler.
-     * 
-     * @private
-     * @param {Vehiculo[]} vehiculos - Lista de todos los vehículos
-     * @returns {number} Cantidad de vehículos en estado "En Alquiler"
+     * * * Utiliza el método {@link Vehiculo.estaEnAlquiler | estaEnAlquiler()} de cada vehículo.
+     * * @private
+     * @param {Vehiculo[]} vehiculos - Lista de todos los vehículos.
+     * @returns {number} Cantidad de vehículos en estado "En Alquiler".
      */
     
     private ocupacionFlota (vehiculos: Array <Vehiculo>): number{
-        return vehiculos.filter(v => v.getEstado() === EstadoVehiculo.EnAlquiler).length
+        //return vehiculos.filter(v => v.getEstado() === EstadoEnAlquiler).length
+        return vehiculos.filter(v => v.estaEnAlquiler()).length;
     }
 
     /**
      * Calcula el porcentaje de ocupación de la flota.
-     * 
-     * **Fórmula:** (Vehículos en alquiler / Total de vehículos) × 100
-     * 
-     * @param {Vehiculo[]} vehiculos - Lista de todos los vehículos
-     * @returns {number} Porcentaje de ocupación (0-100)
-     * @throws {Error} Si la flota está vacía
-     * 
-     * @example
+     * * **Fórmula:** (Vehículos en alquiler / Total de vehículos) × 100
+     * * @public
+     * @param {Vehiculo[]} vehiculos - Lista de todos los vehículos.
+     * @returns {number} Porcentaje de ocupación (0-100).
+     * @throws {Error} Si la flota está vacía, para evitar la división por cero.
+     * * @example
      * // Si hay 7 vehículos en alquiler de 10 totales:
      * porcentajeDeOcupacion(vehiculos); // Retorna 70
      */

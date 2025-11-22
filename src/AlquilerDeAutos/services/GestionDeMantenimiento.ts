@@ -1,4 +1,3 @@
-import { EstadoVehiculo } from "../enums/EstadoVehiculo";
 import { Vehiculo } from "../models/Vehiculo";
 import MantenimientoDeVehiculo from "./MantenimientoDeVehiculo";
 
@@ -14,14 +13,11 @@ export default class GestorDeMantenimiento{
 
     /**
      * Registra un nuevo mantenimiento para un vehículo.
-     * 
-     * Crea un registro de mantenimiento con la fecha actual
-     * y lo agrega a la lista de vehículos en mantenimiento.
-     * 
-     * @param {Vehiculo} vehiculo - Vehículo a registrar para mantenimiento
-     * 
-     * @example
-     * const vehiculo = new Compacto("ABC-123", EstadoVehiculo.Disponible, 0);
+     * * Crea un registro de mantenimiento con la fecha actual y lo agrega a la lista.
+     * * @public
+     * @param {Vehiculo} vehiculo - Vehículo a registrar.
+     * * @example
+     * const vehiculo = new Compacto("ABC-123", 0);
      * gestorDeMantenimiento.registrarMantenimiento(vehiculo);
      */
     
@@ -33,29 +29,21 @@ export default class GestorDeMantenimiento{
     }
 
     /**
-     * Procesa el mantenimiento de un vehículo.
-     * 
-     * Incrementa el contador de alquileres del vehículo y verifica
-     * si necesita mantenimiento. Si lo requiere, cambia su estado
-     * a "En Mantenimiento" y registra el mantenimiento.
-     * 
-     * @param {Vehiculo} vehiculo - Vehículo a procesar
-     * 
-     * @example
-     * gestorDeMantenimiento.procesarMantenimiento(vehiculo);
+     * Finaliza el mantenimiento de un vehículo, delegando la acción al objeto Vehiculo.
+     * * * Llama al método {@link Vehiculo.finalizarMantenimiento | finalizarMantenimiento()}
+     * * * y registra el mantenimiento como completado.
+     * * @public
+     * @param {Vehiculo} vehiculo - Vehículo cuyo mantenimiento se va a finalizar.
+     * @returns {void}
+     * @throws {Error} Propaga cualquier error si el vehículo no está en estado 'Mantenimiento'.
      */
     
-    public procesarMantenimiento(vehiculo: Vehiculo): void{
-        vehiculo.incrementarAlquiler();
-        
-        if (vehiculo.necesitaMantenimiento()) {
-            vehiculo.setEstado(EstadoVehiculo.EnMantenimiento);
-            this.registrarMantenimiento(vehiculo);
-            vehiculo.resetearValoresMantenimiento();
-        }
-    }
-
     public finalizarMantenimiento(vehiculo: Vehiculo): void{
-        vehiculo.setEstado(EstadoVehiculo.Disponible);
+        try{
+            vehiculo.finalizarMantenimiento();
+            this.registrarMantenimiento(vehiculo);
+        } catch (error) {
+            throw error;
+        }
     }
 }

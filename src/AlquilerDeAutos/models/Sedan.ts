@@ -23,8 +23,8 @@ export default class Sedan extends Vehiculo {
      * @param estado - Estado actual del vehiculo (disponible, en alquiler o mantenmiento)
      * @param contadorKm - Cantidad de km acumulados del vehiculo
      */
-    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number) {
-        super(matricula, estado, contadorKm);
+    constructor(matricula: string, contadorKm: number) {
+        super(matricula, contadorKm);
         this.setTarifaBase(TARIFAS_AUTOS.SEDAN.BASE);
         this.setTarifaExtra(TARIFAS_AUTOS.SEDAN.EXTRA);
     }

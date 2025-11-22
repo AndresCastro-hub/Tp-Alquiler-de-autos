@@ -26,8 +26,8 @@ export default class Suv extends Vehiculo {
      * @param contadorKm - Cantidad de km acumulados del vehiculo
      */
 
-    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number) {
-        super(matricula, estado, contadorKm,);
+    constructor(matricula: string, contadorKm: number) {
+        super(matricula, contadorKm);
         this.setTarifaBase(TARIFAS_AUTOS.SUV.BASE);
         this.setTarifaExtra(TARIFAS_AUTOS.SUV.EXTRA)
         this.tarifaFijaSeguro = TARIFAS_AUTOS.SUV.SEGURO;

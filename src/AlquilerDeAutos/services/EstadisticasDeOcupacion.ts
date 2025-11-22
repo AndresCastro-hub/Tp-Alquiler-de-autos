@@ -1,4 +1,3 @@
-import { EstadoVehiculo } from "../enums/EstadoVehiculo";
 import { Vehiculo } from "../models/Vehiculo";
 
 /**
@@ -19,7 +18,8 @@ export default class EstadististicasDeOcupacion{
      */
     
     private ocupacionFlota (vehiculos: Array <Vehiculo>): number{
-        return vehiculos.filter(v => v.getEstado() === EstadoVehiculo.EnAlquiler).length
+        //return vehiculos.filter(v => v.getEstado() === EstadoEnAlquiler).length
+        return vehiculos.filter(v => v.estaEnAlquiler()).length;
     }
 
     /**

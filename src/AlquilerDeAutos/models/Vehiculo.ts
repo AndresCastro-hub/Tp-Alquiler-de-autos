@@ -1,6 +1,5 @@
-import { EstadoVehiculo } from "../enums/EstadoVehiculo";
-import GestorDeMantenimiento from "../services/GestionDeMantenimiento";
-import MantenimientoDeVehiculo from "../services/MantenimientoDeVehiculo";
+import EstadoDisponible from "./EstadosVehiculo/EstadoDisponible";
+import IEstadoVehiculo from "./EstadosVehiculo/IEstadoVehiculo";
 import RegistroDia from "./RegistroDia";
 import TemporadaBase from "./TemporadaBase";
 import { VehiculoMantenimiento } from "./VehiculoMantenimiento";
@@ -19,7 +18,7 @@ import { VehiculoMantenimiento } from "./VehiculoMantenimiento";
 
 export abstract class Vehiculo {
     private matricula: string;
-    private estado: EstadoVehiculo;
+    private estado: IEstadoVehiculo;
     private contadorKm: number;
     private tarifaBase: number;
     private tarifaExtra: number;
@@ -33,9 +32,9 @@ export abstract class Vehiculo {
      * @param contadorKm - Kilometraje total acumulado del vehiculo
      */
 
-    constructor(matricula: string, estado: EstadoVehiculo, contadorKm: number) {
+    constructor(matricula: string, contadorKm: number) {
         this.matricula = matricula;
-        this.estado = estado;
+        this.estado = new EstadoDisponible();
         this.contadorKm = contadorKm;
         this.tarifaBase = 0;
         this.tarifaExtra = 0;
@@ -48,10 +47,10 @@ export abstract class Vehiculo {
     public setMatricula(matricula: string): void {
         this.matricula = matricula;
     }
-    public getEstado(): string {
+    public getEstado(): IEstadoVehiculo {
         return this.estado;
     }
-    public setEstado(estado: EstadoVehiculo): void {
+    public setEstado(estado: IEstadoVehiculo): void {
         this.estado = estado;
     }
     public getContadorKm(): number {
@@ -100,7 +99,6 @@ export abstract class Vehiculo {
         this.contadorKm += km;
     }
 
-    //ITEM 2
     public necesitaMantenimiento(): boolean {
         return this.mantenimiento.necesitaMantenimiento(this.contadorKm);
     }
@@ -115,5 +113,21 @@ export abstract class Vehiculo {
 
     public actualizarKMRecorridos(kmRecorridos: number): void{
         this.setContadorKm(this.getContadorKm() + kmRecorridos);
+    }
+
+    public reservar(): void {
+        this.estado.reservar(this);
+    }
+
+    public finalizarAlquiler(): void {
+        this.estado.finalizarAlquiler(this);
+    }
+
+    public finalizarMantenimiento(): void {
+        this.estado.finalizarMantenimiento(this);
+    }
+
+    public estaEnAlquiler(): boolean {
+        return this.estado.estaEnAlquiler();
     }
 }
